@@ -4,7 +4,7 @@
 class Primitives {
 public:
 	void Init();
-	void DrawSquare();
+	void DrawCube();
 };
 
 extern Primitives g_primitives;
