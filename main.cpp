@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Primitives.h"
 #include "Shader.h"
+#include "Camera.h"
 
 bool running = true;
 
@@ -11,9 +12,12 @@ int main(){
 	g_window.Init();
 	g_shaders.Init();
 	g_primitives.Init();
+	g_camera.Init();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	while(running){
 		SDL_Event event;
@@ -36,7 +40,8 @@ int main(){
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		g_primitives.DrawCube();
+		g_primitives.square.Draw();
+		g_primitives.tube.Draw();
 
 		g_window.Draw();
 

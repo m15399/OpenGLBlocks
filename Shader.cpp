@@ -8,6 +8,9 @@
 
 Shaders g_shaders;
 
+Shader* Shader::currShader = nullptr;
+
+
 void Shaders::Init(){
 	shader1.Load("shader1");
 }
@@ -32,9 +35,6 @@ bool CreateShader(GLuint* dest, GLint type, std::string filename){
 	bool status = true;
 
 	GLuint shader = 0;
-
-	GLint result = GL_FALSE;
-	int logLength;
 
 	std::string contents = ReadWholeFile(filename);
 
@@ -118,12 +118,27 @@ bool Shader::Load(const char* shaderName){
 
 	if(status){
 		mvpLoc = glGetUniformLocation(program, "mvp");
+		colorTintLoc = glGetUniformLocation(program, "colorTint");
+		positionAttrib = glGetAttribLocation(program, "a_position");
+		colorAttrib = glGetAttribLocation(program, "a_color");
 	}
 
 	return status;
 }
 
 void Shader::Use(){
-	glUseProgram(program);
+	if(!bound){
+		glUseProgram(program);
+
+		if(currShader)
+			currShader->Unuse();
+
+		bound = true;
+		currShader = this;
+	}
+}
+
+void Shader::Unuse(){
+	bound = false;
 }
 
