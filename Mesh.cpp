@@ -1,6 +1,5 @@
 
 #include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Mesh.h"
@@ -42,7 +41,7 @@ void Mesh::Set(const GLfloat* vertices, const GLubyte* colors, int numVertices,
 	SetIndeces(indeces, numTris * 3);
 }
 
-void Mesh::Draw(Shader& shader, glm::mat4 modelMatrix, glm::vec4 colorTint){
+void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& colorTint){
 
 	shader.Use();
 
@@ -65,5 +64,5 @@ void Mesh::Draw(Shader& shader, glm::mat4 modelMatrix, glm::vec4 colorTint){
 	glDrawElements(GL_TRIANGLES, numIndeces, GL_UNSIGNED_SHORT, nullptr);
 	glDisableVertexAttribArray(shader.colorAttrib);
 	glDisableVertexAttribArray(shader.positionAttrib);
-	
+
 }
