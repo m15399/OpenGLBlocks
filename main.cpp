@@ -25,7 +25,7 @@ int main(){
 
 	while(running){
 		g_time.Update();
-		
+
 		SDL_Event event;
 		while(SDL_PollEvent(&event)){
 			switch(event.type){
@@ -46,7 +46,7 @@ int main(){
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		g_camera.CenterOn(glm::vec3(0, 0, -3), 35);
+		g_camera.CenterOn(glm::vec3(0, 0, -3), 1 * 35.f);
 
 		g_grid.Draw();
 

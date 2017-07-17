@@ -27,7 +27,7 @@ GLubyte tubeColors[] = {
 	255, 255, 255, 0
 };
 
-GLushort tubeIndeces[] = {
+GLuint tubeIndeces[] = {
 	0, 3, 7,    0, 7, 4,
 	0, 4, 5,    0, 5, 1,
 	6, 2, 1,    6, 1, 5,
@@ -49,7 +49,7 @@ GLubyte squareColors[] = {
 	255, 255, 255, 255,
 };
 
-GLushort squareIndeces[] = {
+GLuint squareIndeces[] = {
 	0, 1, 2,    0, 2, 3,
 };
 
@@ -75,7 +75,7 @@ static const GLubyte cubeColors[] = {
 	255, 255, 255, 255
 };
 
-static const GLushort cubeIndeces[] = {
+static const GLuint cubeIndeces[] = {
 	0, 1, 2,    0, 2, 3,
 	0, 3, 7,    0, 7, 4,
 	0, 4, 5,    0, 5, 1,

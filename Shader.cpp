@@ -13,6 +13,7 @@ Shader* Shader::currShader = nullptr;
 
 void Shaders::Init(){
 	shader1.Load("shader1");
+	blockTop.Load("blockTop");
 }
 
 
@@ -121,6 +122,7 @@ bool Shader::Load(const char* shaderName){
 		colorTintLoc = glGetUniformLocation(program, "colorTint");
 		positionAttrib = glGetAttribLocation(program, "a_position");
 		colorAttrib = glGetAttribLocation(program, "a_color");
+		vOffsetAttrib = glGetAttribLocation(program, "a_vOffset");
 	}
 
 	return status;
