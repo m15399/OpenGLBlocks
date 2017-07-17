@@ -1,4 +1,6 @@
 
+#include <unistd.h> // for sleeping
+
 #include "SDL.h"
 #include "Window.h"
 #include "Primitives.h"
@@ -56,6 +58,8 @@ int main(){
 		if(keys[SDL_SCANCODE_F1]){
 			g_window.ToggleFullscreen();
 		}
+
+		// sleep(1);
 	}
 
 	SDL_Quit();

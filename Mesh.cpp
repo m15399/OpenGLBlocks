@@ -77,7 +77,12 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 	if(shader.vOffsetAttrib != -1){
 		glEnableVertexAttribArray(shader.vOffsetAttrib);
 		glBindBuffer(GL_ARRAY_BUFFER, vOffsetsBuffer);
-		glVertexAttribPointer(shader.vOffsetAttrib, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+		GLsizei stride = 0;
+
+		// Assumption - borrowing from 2x size buffer (top mesh borrowing from bottom)
+		if(borrowingVOffsets)
+			stride = 2 * sizeof(GL_FLOAT);
+		glVertexAttribPointer(shader.vOffsetAttrib, 1, GL_FLOAT, GL_FALSE, stride, nullptr);
 	}
 
 	// TODO can go back to ushort when not debugging large grids

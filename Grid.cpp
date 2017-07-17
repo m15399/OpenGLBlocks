@@ -21,9 +21,6 @@ void InitGridTopsMesh(Mesh& mesh, int w){
 	std::vector<GLubyte> colors;
 	colors.reserve(nVertices * 4);
 
-	std::vector<GLfloat> vOffsets;
-	vOffsets.reserve(nVertices);
-	
 	std::vector<GLuint> indeces;
 	indeces.reserve(nTris * 3);
 
@@ -35,27 +32,22 @@ void InitGridTopsMesh(Mesh& mesh, int w){
 			int yo = i - w/2;
 
 			vertices.insert(vertices.end(), {
-				.5f + xo, .5f + yo, .5f,
-				-.5f + xo, .5f + yo, .5f,
-				-.5f + xo, -.5f + yo, .5f,
-				.5f + xo, -.5f + yo, .5f,
+				.5f + xo, .5f + yo, 0,
+				-.5f + xo, .5f + yo, 0,
+				-.5f + xo, -.5f + yo, 0,
+				.5f + xo, -.5f + yo, 0
 			});
 
 			colors.insert(colors.end(), {
-				0, 255, 255, 255,
-				255, 0, 255, 255,
-				255, 255, 0, 255,
 				255, 255, 255, 255,
-			});
-
-			float verticalOffset = 0;
-			vOffsets.insert(vOffsets.end(), {
-				verticalOffset, verticalOffset, verticalOffset, verticalOffset
+				255, 255, 255, 255,
+				255, 255, 255, 255,
+				255, 255, 255, 255
 			});
 
 			indeces.insert(indeces.end(), {
 				(GLuint) (0 + vertexOffset), (GLuint) (1 + vertexOffset), (GLuint) (2 + vertexOffset),
-				(GLuint) (0 + vertexOffset), (GLuint) (2 + vertexOffset), (GLuint) (3 + vertexOffset),
+				(GLuint) (0 + vertexOffset), (GLuint) (2 + vertexOffset), (GLuint) (3 + vertexOffset)
 			});
 
 			vertexOffset += 4;
@@ -64,7 +56,6 @@ void InitGridTopsMesh(Mesh& mesh, int w){
 	}
 
 	mesh.Set(&vertices[0], &colors[0], nVertices, &indeces[0], nTris);
-	mesh.SetVOffsets(&vOffsets[0], nVertices);
 }
 
 void InitGridBottomsMesh(Mesh& mesh, int w){
@@ -94,14 +85,14 @@ void InitGridBottomsMesh(Mesh& mesh, int w){
 			int yo = i - w/2;
 
 			vertices.insert(vertices.end(), {
-				.5f + xo, .5f + yo, .5f,
-				-.5f + xo, .5f + yo, .5f,
-				-.5f + xo, -.5f + yo, .5f,
-				.5f + xo, -.5f + yo, .5f,
-				.5f + xo, .5f + yo, -.5f,
-				-.5f + xo, .5f + yo, -.5f,
-				-.5f + xo, -.5f + yo, -.5f,
-				.5f + xo, -.5f + yo, -.5f
+				.5f + xo, .5f + yo, 0,
+				-.5f + xo, .5f + yo, 0,
+				-.5f + xo, -.5f + yo, 0,
+				.5f + xo, -.5f + yo, 0,
+				.5f + xo, .5f + yo, -1,
+				-.5f + xo, .5f + yo, -1,
+				-.5f + xo, -.5f + yo, -1,
+				.5f + xo, -.5f + yo, -1
 			});
 
 			colors.insert(colors.end(), {
@@ -147,6 +138,8 @@ Mesh gridBottomsMesh;
 void Grid::Init(){
 	InitGridTopsMesh(gridTopsMesh, MaxWidth);
 	InitGridBottomsMesh(gridBottomsMesh, MaxWidth);
+
+	gridTopsMesh.CopyVOffsetsBuffer(gridBottomsMesh);
 }
 
 void Grid::Draw(){	
@@ -158,31 +151,26 @@ void Grid::Draw(){
 	std::vector<GLubyte> colorsTop;
 	colorsTop.reserve(nVerticesTop * 4);
 
-	std::vector<GLfloat> vOffsetsTop;
-	vOffsetsTop.reserve(nVerticesTop);
-
 	std::vector<GLfloat> vOffsetsBottom;
 	vOffsetsBottom.reserve(nVerticesBottom);
 	
 	for(int i = 0; i < w; i++){
 		for(int j = 0; j < w; j++){
 
+			// TODO send topcolor and botcolor in seperate buffers
 			colorsTop.insert(colorsTop.end(), {
-				255, 255, 255, 255,
+				0, 0, 255, 255,
 				255, 0, 255, 255,
 				255, 255, 0, 255,
 				255, 255, 255, 255,
 			});
 
 			float verticalOffset = Random(0.f, 1.f);
-			vOffsetsTop.insert(vOffsetsTop.end(), 4, verticalOffset);
-
 			vOffsetsBottom.insert(vOffsetsBottom.end(), 8, verticalOffset);
 		}
 	}
 	gridTopsMesh.SetColors(&colorsTop[0], nVerticesTop * 4);
-	gridTopsMesh.SetVOffsets(&vOffsetsTop[0], nVerticesTop);
-	gridBottomsMesh.SetVOffsets(&vOffsetsBottom[0], nVerticesBottom);
+	gridBottomsMesh.SetVOffsets(&vOffsetsBottom[0], nVerticesBottom); // topMesh borrows this
 
 	gridTopsMesh.Draw(g_shaders.blockTop);
 	gridBottomsMesh.Draw(g_shaders.blockTop);
