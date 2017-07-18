@@ -6,7 +6,7 @@
 class Time {
 public:
 
-	static constexpr uint64_t fpsMeasurementIntervalMs = 500;
+	static constexpr uint64_t fpsMeasurementIntervalMs = 1000;
 
 	uint64_t framesThisInterval;
 	uint64_t time;

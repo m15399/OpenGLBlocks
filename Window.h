@@ -15,10 +15,12 @@ public:
 	int width = 640;
 	int height = 480;
 	bool fullscreen = false;
+	bool lockedFramerate = true;
 
 	void Init();
 
 	void ToggleFullscreen();
+	void ToggleUnlockedFramerate();
 
 	void Draw();
 

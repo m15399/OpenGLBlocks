@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include "Window.h"
 
 Window g_window;
@@ -23,6 +25,9 @@ void Window::Init(){
 
 	glcontext = SDL_GL_CreateContext(window);
 
+	lockedFramerate = !lockedFramerate;
+	ToggleUnlockedFramerate();
+
 	glViewport(0, 0, width, height);
 }
 
@@ -33,6 +38,16 @@ void Window::ToggleFullscreen(){
 		flags = SDL_WINDOW_FULLSCREEN;
 	}
 	SDL_SetWindowFullscreen(window, flags);
+}
+
+void Window::ToggleUnlockedFramerate(){
+	lockedFramerate = !lockedFramerate;
+	std::cout << "Locked framerate: " << lockedFramerate << "\n";
+
+	if(lockedFramerate)
+		SDL_GL_SetSwapInterval(1);
+	else
+		SDL_GL_SetSwapInterval(0);
 }
 
 void Window::Draw(){

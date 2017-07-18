@@ -11,34 +11,31 @@ glm::mat4 modelMatrix;
 
 
 void Mesh::Init(){
-	glGenBuffers(1, &verticesBuffer);
-	glGenBuffers(1, &colorsBuffer);
-	glGenBuffers(1, &vOffsetsBuffer);
-	glGenBuffers(1, &indecesBuffer);
-}
+	#define GEN_SHADER_BUFFER(name) \
+		glGenBuffers(1, &name##Buffer);
 
-void Mesh::CopyVOffsetsBuffer(Mesh& other){
-	glDeleteBuffers(1, &vOffsetsBuffer);
-	vOffsetsBuffer = other.vOffsetsBuffer;
-	borrowingVOffsets = true;
+	SHADER_ATTRIB_LIST(GEN_SHADER_BUFFER);
+
+	glGenBuffers(1, &indecesBuffer);
 }
 
 // Count is vertices.length - not number of vertices
 //
 void Mesh::SetVertices(const GLfloat* vertices, int count){
-	glBindBuffer(GL_ARRAY_BUFFER, verticesBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, a_positionBuffer);
 	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 }
 
 void Mesh::SetColors(const GLubyte* colors, int count){
-	glBindBuffer(GL_ARRAY_BUFFER, colorsBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, a_colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLubyte), colors, GL_DYNAMIC_DRAW);
 }
 
-void Mesh::SetVOffsets(const GLfloat* offsets, int count){
-	glBindBuffer(GL_ARRAY_BUFFER, vOffsetsBuffer);
-	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), offsets, GL_DYNAMIC_DRAW);
+void Mesh::SetBoneIndeces(const GLushort* indeces, int count){
+	glBindBuffer(GL_ARRAY_BUFFER, a_boneIndexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLushort), indeces, GL_STATIC_DRAW);	
 }
+
 
 // TODO combine with SetVertices - calculate normals?
 void Mesh::SetIndeces(const GLuint* indeces, int count){
@@ -55,7 +52,6 @@ void Mesh::Set(const GLfloat* vertices, const GLubyte* colors, int numVertices,
 }
 
 void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& colorTint){
-
 	shader.Use();
 
 	glm::mat4 MVP = g_camera.GetViewProjMatrix() * modelMatrix;
@@ -66,33 +62,29 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indecesBuffer);
 
 
-	glEnableVertexAttribArray(shader.positionAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, verticesBuffer);
-	glVertexAttribPointer(shader.positionAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glEnableVertexAttribArray(shader.a_positionLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, a_positionBuffer);
+	glVertexAttribPointer(shader.a_positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glEnableVertexAttribArray(shader.colorAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, colorsBuffer);
-	glVertexAttribPointer(shader.colorAttrib, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
+	glEnableVertexAttribArray(shader.a_colorLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, a_colorBuffer);
+	glVertexAttribPointer(shader.a_colorLoc, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 
-	if(shader.vOffsetAttrib != -1){
-		glEnableVertexAttribArray(shader.vOffsetAttrib);
-		glBindBuffer(GL_ARRAY_BUFFER, vOffsetsBuffer);
-		GLsizei stride = 0;
+	if(shader.a_boneIndexLoc != -1){
+		glEnableVertexAttribArray(shader.a_boneIndexLoc);
+		glBindBuffer(GL_ARRAY_BUFFER, a_boneIndexBuffer);
 
-		// Assumption - borrowing from 2x size buffer (top mesh borrowing from bottom)
-		if(borrowingVOffsets)
-			stride = 2 * sizeof(GL_FLOAT);
-		glVertexAttribPointer(shader.vOffsetAttrib, 1, GL_FLOAT, GL_FALSE, stride, nullptr);
+		glVertexAttribPointer(shader.a_boneIndexLoc, 1, GL_UNSIGNED_SHORT, GL_FALSE, 0, nullptr);
 	}
 
 	// TODO can go back to ushort when not debugging large grids
 	glDrawElements(GL_TRIANGLES, numIndeces, GL_UNSIGNED_INT, nullptr);
 
-	glDisableVertexAttribArray(shader.colorAttrib);
-	glDisableVertexAttribArray(shader.positionAttrib);
+	glDisableVertexAttribArray(shader.a_colorLoc);
+	glDisableVertexAttribArray(shader.a_positionLoc);
 
-	if(shader.vOffsetAttrib != -1){
-		glDisableVertexAttribArray(shader.vOffsetAttrib);
+	if(shader.a_boneIndexLoc != -1){
+		glDisableVertexAttribArray(shader.a_boneIndexLoc);
 	}
 
 }

@@ -118,11 +118,15 @@ bool Shader::Load(const char* shaderName){
 		glDeleteShader(fragmentShader);
 
 	if(status){
-		mvpLoc = glGetUniformLocation(program, "mvp");
-		colorTintLoc = glGetUniformLocation(program, "colorTint");
-		positionAttrib = glGetAttribLocation(program, "a_position");
-		colorAttrib = glGetAttribLocation(program, "a_color");
-		vOffsetAttrib = glGetAttribLocation(program, "a_vOffset");
+		#define LOCATE_ATTRIBUTE(name) \
+			name##Loc = glGetAttribLocation(program, #name);
+
+		SHADER_ATTRIB_LIST(LOCATE_ATTRIBUTE);
+
+		#define LOCATE_UNIFORM(name) \
+			name##Loc = glGetUniformLocation(program, #name);
+
+		SHADER_UNIFORM_LIST(LOCATE_UNIFORM);
 	}
 
 	return status;

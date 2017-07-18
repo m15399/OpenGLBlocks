@@ -9,9 +9,13 @@
 
 class Mesh {
 
-	GLuint verticesBuffer;
-	GLuint colorsBuffer;
-	GLuint vOffsetsBuffer;
+	#define DEFINE_SHADER_BUFFER(name) \
+		GLuint name##Buffer;
+
+	SHADER_ATTRIB_LIST(DEFINE_SHADER_BUFFER);
+
+	#undef DEFINE_SHADER_BUFFER
+
 
 	GLuint indecesBuffer;
 	GLsizei numIndeces;
@@ -22,13 +26,12 @@ public:
 	
 	void Init();
 	
-	void CopyVOffsetsBuffer(Mesh& other);
-
 	void Set(const GLfloat* vertices, const GLubyte* colors, int numVertices,
 			const GLuint* indeces, int numTris);
 	
 	void SetVertices(const GLfloat* vertices, int count);
 	void SetColors(const GLubyte* colors, int count);
+	void SetBoneIndeces(const GLushort* indeces, int count);
 	void SetVOffsets(const GLfloat* offsets, int count);
 
 	void SetIndeces(const GLuint* indeces, int count);

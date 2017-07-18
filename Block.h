@@ -14,6 +14,6 @@ public:
 	void SetPosition(const glm::vec3& pos);
 	void SetTopColor(const glm::vec4& color);
 	void SetBottomColor(const glm::vec4& color);
-	void Draw();
+	// void Draw();
 
 };

@@ -18,7 +18,7 @@ void Block::SetBottomColor(const glm::vec4& color){
 	bottomColor = color;
 }
 
-void Block::Draw(){
+// void Block::Draw(){
 
 	// float brighten = 1.04f;
 	// float semiBrighten = 1.02f;
@@ -52,15 +52,4 @@ void Block::Draw(){
 	// };
 
 	// g_primitives.square.SetColors(squareColors, 4 * 4);
-
-	glm::mat4 modelMatrix(1.0f);
-	modelMatrix = glm::translate(modelMatrix, position);
-
-	Shader& shader = g_shaders.shader1;
-
-	// TODO draw top and bot with seperate methods (draw all tops, then all bottoms)
-	// TODO use private meshes instead of Primitive's ones
-
-	g_primitives.square.Draw(shader, modelMatrix);
-	// g_primitives.tube.Draw(shader, modelMatrix, bottomColor);
-}
+// }
