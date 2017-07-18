@@ -3,8 +3,6 @@
 
 TODO
 
-resizing window
-	high dpi too
 special frag shader for block top
 block bottom shader
 use Block objects for state
@@ -12,6 +10,12 @@ use Block objects for state
 alpha fading on edges
 moving camera (grid window follows)
 go back to using vOffset buffer? no uniform limits
+ridiculous cpu usage when not focused
+
+
+
+fix fullscreen
+high dpi
 
 */
 
@@ -54,6 +58,12 @@ int main(){
 				case SDL_QUIT:
 					running = false;
 					break;
+				case SDL_WINDOWEVENT:
+					switch(event.window.event) {
+						case SDL_WINDOWEVENT_SIZE_CHANGED:
+							g_window.Resize(event.window.data1, event.window.data2);
+							break;
+					}
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
 					g_input.UpdateKey(event.key);
@@ -66,7 +76,7 @@ int main(){
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		g_camera.CenterOn(glm::vec3(0, 0, -3), 1 * 35.f);
+		g_camera.CenterOn(glm::vec3(0, 0, -3), 1.f * 35.f);
 
 		g_grid.Draw();
 

@@ -11,7 +11,13 @@ void Window::Init(){
 		exit(1);
 	}
 
+
 	uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+
+#if 0
+ 	flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+#endif
+
 	if(fullscreen){
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
@@ -28,14 +34,35 @@ void Window::Init(){
 	lockedFramerate = !lockedFramerate;
 	ToggleUnlockedFramerate();
 
-	glViewport(0, 0, width, height);
+	Resize(width, height);
 }
+
+void Window::Resize(int newWidth, int newHeight){
+	width = newWidth;
+	height = newHeight;
+
+	// Actual pixels are different if using high dpi
+	int pxWidth, pxHeight; 
+	SDL_GL_GetDrawableSize(window, &pxWidth, &pxHeight);
+
+	std::cout << "Window size: " << width << " x " << height << 
+		" (pxSize: " << pxWidth << " x " << pxHeight << ")\n";
+
+	glViewport(0, 0, pxWidth, pxHeight);
+}
+
 
 void Window::ToggleFullscreen(){
 	fullscreen = !fullscreen;
+	std::cout << "Fullscreen: " << fullscreen << "\n";
+
 	uint32_t flags = 0;
 	if(fullscreen){
-		flags = SDL_WINDOW_FULLSCREEN;
+		flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+		// SDL_DisplayMode display;
+		// SDL_GetCurrentDisplayMode(0, &display);
+		// std::cout << display.w << " ---- " << display.h << "\n";
 	}
 	SDL_SetWindowFullscreen(window, flags);
 }

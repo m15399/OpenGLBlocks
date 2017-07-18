@@ -1,7 +1,9 @@
 
-#include "Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "Camera.h"
+#include "Window.h"
 
 Camera g_camera;
 
@@ -19,8 +21,10 @@ void Camera::CenterOn(const glm::vec3 &point, float distance){
 glm::mat4 Camera::GetViewProjMatrix(){
 	if(dirtyMatrix){
 		viewMatrix = glm::lookAt(eye, center, up);
-		// TODO use correct aspect ratio
-		projMatrix = glm::perspective(glm::radians(45.0f), 1.33f, .1f, 10000.f);
+
+		float aspect = (float) g_window.width / g_window.height;
+		projMatrix = glm::perspective(glm::radians(45.0f), aspect, .1f, 10000.f);
+
 		viewProjMatrix = projMatrix * viewMatrix;
 		dirtyMatrix = false;
 	}

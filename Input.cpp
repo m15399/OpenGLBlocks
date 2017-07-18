@@ -25,6 +25,9 @@ void Input::Update(){
 void Input::UpdateKey(SDL_KeyboardEvent& e){
 
 	int index = e.keysym.scancode;
+	
+	if(index > KeyArraySize || index < 0)
+		return;
 
 	if(e.state == SDL_PRESSED){
 		if(!e.repeat){

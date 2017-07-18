@@ -13,11 +13,13 @@ public:
 
 	const char* title = "SDL Test";
 	int width = 640;
-	int height = 480;
+	int height = 320;
 	bool fullscreen = false;
 	bool lockedFramerate = true;
 
 	void Init();
+
+	void Resize(int width, int height);
 
 	void ToggleFullscreen();
 	void ToggleUnlockedFramerate();
