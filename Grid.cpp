@@ -151,29 +151,75 @@ void Grid::Draw(){
 	int w = MaxWidth;
 	int nSquares = w * w;
 	int nVerticesTop = nSquares * 4;
-	// int nVerticesBottom = nSquares * 8;
+	int nVerticesBottom = nSquares * 8;
+
 
 	std::vector<GLubyte> colorsTop;
 	colorsTop.reserve(nVerticesTop * 4);
-
-	std::vector<GLfloat> vOffsets;
-	vOffsets.reserve(nSquares);
 	
 	for(int i = 0; i < w; i++){
 		for(int j = 0; j < w; j++){
 
-			// TODO send topcolor and botcolor in seperate buffers
-			colorsTop.insert(colorsTop.end(), {
-				0, 0, 255, 255,
-				255, 0, 255, 255,
-				255, 255, 0, 255,
-				255, 255, 255, 255,
-			});
+			GLubyte r = 120;
+			GLubyte g = 180;
+			GLubyte b = 255;
+			GLubyte a = 255;
 
-			vOffsets.push_back((GLfloat)(std::sin((g_time.time % 1000000) / 1000.f + i/2.f + j/4.f)));
+			auto Brighten = [](GLubyte v){
+				float brighten = 1.04f;
+				return (GLubyte)(int)(std::ceil(std::min(brighten * v, 254.99f)));
+			};
+
+			auto SemiBrighten = [](GLubyte v){
+				float semiBrighten = 1.02f;
+				return (GLubyte)(int)(std::ceil(std::min(semiBrighten * v, 254.99f)));
+			};
+
+			colorsTop.insert(colorsTop.end(), {
+				Brighten(r), Brighten(g), Brighten(b), a,
+				r, g, b, a,
+				r, g, b, a,
+				SemiBrighten(r), SemiBrighten(g), SemiBrighten(b), a,
+			});
 		}
 	}
 	gridTopsMesh.SetColors(&colorsTop[0], nVerticesTop * 4);
+
+
+	std::vector<GLubyte> colorsBottom;
+	colorsBottom.reserve(nVerticesBottom * 4);
+
+	for(int i = 0; i < w; i++){
+		for(int j = 0; j < w; j++){
+
+			GLubyte r = 120;
+			GLubyte g = 180;
+			GLubyte b = 250;
+
+			colorsBottom.insert(colorsBottom.end(), {
+				r, g, b, 255,
+				r, g, b, 255,
+				r, g, b, 255,
+				r, g, b, 255,
+				r, g, b, 0,
+				r, g, b, 0,
+				r, g, b, 0,
+				r, g, b, 0,
+			});
+		}
+	}
+	gridBottomsMesh.SetColors(&colorsBottom[0], nVerticesBottom * 4);
+
+
+	std::vector<GLfloat> vOffsets;
+	vOffsets.reserve(nSquares);
+
+	for(int i = 0; i < w; i++){
+		for(int j = 0; j < w; j++){
+			vOffsets.push_back((GLfloat)(std::sin((g_time.time % 1000000) / 1000.f + i/10.f + j/4.f) * 1.0f));
+		}
+	}
+
 
 	Shader& shader = g_shaders.blockTop;
 	shader.Use();

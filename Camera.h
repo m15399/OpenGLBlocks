@@ -13,9 +13,14 @@ class Camera {
 
 public:
 
+	float defaultCameraDistance = 1.f * 40.f;
+	float cameraDistance = defaultCameraDistance;
+
 	glm::vec3 eye, center, up;
 
 	void Init();
+
+	void Update();
 
 	void CenterOn(const glm::vec3 &point, float distance);
 

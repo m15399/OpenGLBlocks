@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+// Delta time in sec
+//
+float dt();
+
 class Time {
 public:
 
@@ -12,6 +16,8 @@ public:
 	uint64_t time;
 	uint64_t lastTime;
 	uint64_t fps;
+
+	uint64_t dt;
 
 
 	void Init();

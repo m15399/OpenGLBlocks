@@ -48,6 +48,7 @@ int main(){
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
 	while(running){
 		g_input.Update();
 		g_time.Update();
@@ -73,10 +74,10 @@ int main(){
 			}
 		}
 
-		glClearColor(0, 0, 0, 1);
+		glClearColor(0, .25, .45, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		g_camera.CenterOn(glm::vec3(0, 0, -3), 1.f * 35.f);
+		g_camera.Update();
 
 		g_grid.Draw();
 

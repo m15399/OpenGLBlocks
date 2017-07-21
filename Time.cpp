@@ -6,6 +6,10 @@
 
 Time g_time;
 
+float dt(){
+	return g_time.dt / 1000.f;
+}
+
 uint64_t Millis(){
 	uint64_t milliseconds_since_epoch = 
 		std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -16,6 +20,7 @@ uint64_t Millis(){
 void Time::Init(){
 	time = Millis();
 	lastTime = time - 1;
+	dt = time - lastTime;
 	fps = 0;
 	framesThisInterval = 0;
 }
@@ -23,6 +28,8 @@ void Time::Init(){
 void Time::Update(){
 	lastTime = time;
 	time = Millis();
+
+	dt = time - lastTime;
 
 	framesThisInterval++;
 
