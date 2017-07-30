@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Time.h"
+#include "Grid.h"
 
 Camera g_camera;
 
@@ -21,7 +22,12 @@ void Camera::Update(){
 		cameraDistance *= (1 + cameraSpeed * dt());
 	if(g_input.KeyPressed(SDL_SCANCODE_O))
 		cameraDistance = defaultCameraDistance;
-	CenterOn(glm::vec3(0, 0, -5), cameraDistance);
+	
+	float x = g_grid.viewOffsetX;
+	float y = g_grid.viewOffsetY;
+	CenterOn(glm::vec3(x, y, -5), cameraDistance);
+
+
 }
 
 void Camera::CenterOn(const glm::vec3 &point, float distance){

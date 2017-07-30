@@ -4,11 +4,9 @@
 TODO
 
 block bottom shader
-alpha fading on edges
-moving camera (grid window follows)
+alpha fading on edges is not quite right
 ridiculous cpu usage when not focused
 use triangle strips for grid
-
 
 fix fullscreen
 high dpi
@@ -41,7 +39,7 @@ int main(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // TODO this isn't quite right
 
 
 	while(running){
@@ -72,6 +70,7 @@ int main(){
 		glClearColor(0, .25, .45, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		g_grid.Update();
 		g_camera.Update();
 
 		g_grid.Draw();
