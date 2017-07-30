@@ -13,7 +13,6 @@ Shader* Shader::currShader = nullptr;
 
 void Shaders::Init(){
 	shader1.Load("shader1");
-	blockTop.Load("blockTop");
 }
 
 

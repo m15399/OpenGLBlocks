@@ -47,7 +47,6 @@ public:
 	void Init();
 
 	Shader shader1;
-	Shader blockTop;
 };
 
 extern Shaders g_shaders;

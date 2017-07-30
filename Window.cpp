@@ -58,7 +58,7 @@ void Window::ToggleFullscreen(){
 
 	uint32_t flags = 0;
 	if(fullscreen){
-		flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+		flags = SDL_WINDOW_FULLSCREEN;
 
 		// SDL_DisplayMode display;
 		// SDL_GetCurrentDisplayMode(0, &display);

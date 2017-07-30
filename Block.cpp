@@ -1,55 +1,25 @@
 
+#include <cmath>
+
 #include "Block.h"
-#include "Primitives.h"
-#include "Shader.h"
+#include "Time.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+void Block::Init(int x2, int y2){
+	x = x2;
+	y = y2;
 
+	topColor[0] = 120;
+	topColor[1] = 180;
+	topColor[2] = 255;
+	topColor[3] = 255;
 
-void Block::SetPosition(const glm::vec3& pos){
-	position = pos;
+	bottomColor[0] = 120;
+	bottomColor[1] = 180;
+	bottomColor[2] = 225;
+	bottomColor[3] = 255;
+
 }
 
-void Block::SetTopColor(const glm::vec4& color){
-	topColor = color;
+void Block::Update(){
+	z = (GLfloat)(std::sin((g_time.time % 1000000) / 1000.f + x/10.f + y/4.f) * 1.0f);
 }
-
-void Block::SetBottomColor(const glm::vec4& color){
-	bottomColor = color;
-}
-
-// void Block::Draw(){
-
-	// float brighten = 1.04f;
-	// float semiBrighten = 1.02f;
-
-	// GLubyte top1[] = {
-	// 	(GLubyte) (topColor.r * 255),
-	// 	(GLubyte) (topColor.g * 255),
-	// 	(GLubyte) (topColor.b * 255),
-	// 	(GLubyte) (topColor.a * 255)
-	// };
-
-	// GLubyte top2[] = {
-	// 	(GLubyte) (topColor.r * brighten * 255),
-	// 	(GLubyte) (topColor.g * brighten * 255),
-	// 	(GLubyte) (topColor.b * brighten * 255),
-	// 	(GLubyte) (topColor.a * 255)
-	// };
-
-	// GLubyte top3[] = {
-	// 	(GLubyte) (topColor.r * semiBrighten * 255),
-	// 	(GLubyte) (topColor.g * semiBrighten * 255),
-	// 	(GLubyte) (topColor.b * semiBrighten * 255),
-	// 	(GLubyte) (topColor.a * 255)
-	// };
-
-	// GLubyte squareColors[] = {
-	// 	top2[0], top2[1], top2[2], top2[3],
-	// 	top1[0], top1[1], top1[2], top1[3],
-	// 	top1[0], top1[1], top1[2], top1[3],
-	// 	top3[0], top3[1], top3[2], top3[3],
-	// };
-
-	// g_primitives.square.SetColors(squareColors, 4 * 4);
-// }

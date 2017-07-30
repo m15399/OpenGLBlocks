@@ -1,19 +1,17 @@
 
 #pragma once
 
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include "SDL.h"
 
 class Block {
 public:
 
-	glm::vec3 position;
-	glm::vec4 topColor = glm::vec4(1.0f);
-	glm::vec4 bottomColor = glm::vec4(1.0f);
+	int x, y;
+	GLfloat z;
+	GLubyte topColor[4];
+	GLubyte bottomColor[4];
 
-	void SetPosition(const glm::vec3& pos);
-	void SetTopColor(const glm::vec4& color);
-	void SetBottomColor(const glm::vec4& color);
-	// void Draw();
+	void Init(int x, int y);
+	void Update();
 
 };

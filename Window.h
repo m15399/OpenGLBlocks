@@ -12,8 +12,8 @@ class Window {
 public:
 
 	const char* title = "SDL Test";
-	int width = 1440;
-	int height = 900;
+	int width = 1024;
+	int height = 768;
 	bool fullscreen = false;
 	bool lockedFramerate = true;
 

@@ -3,15 +3,11 @@
 
 TODO
 
-special frag shader for block top
 block bottom shader
-use Block objects for state
-	2 colors & height per block
 alpha fading on edges
 moving camera (grid window follows)
-go back to using vOffset buffer? no uniform limits
 ridiculous cpu usage when not focused
-
+use triangle strips for grid
 
 
 fix fullscreen
@@ -19,7 +15,6 @@ high dpi
 
 */
 
-#include <unistd.h> // for sleeping
 #include <iostream>
 
 #include "SDL.h"
