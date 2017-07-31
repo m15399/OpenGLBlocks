@@ -8,8 +8,8 @@ class Grid {
 
 public:
 
-	static constexpr int MaxWidth = 64;
-	static constexpr int Width = 32;
+	static constexpr int MaxWidth = 256;
+	static constexpr int Width = 64;
 
 	Block blocks[MaxWidth * MaxWidth];
 

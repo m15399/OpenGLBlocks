@@ -38,18 +38,19 @@ void Grid::UpdateMeshes(){
 
 	auto Falloff = [this, w](int a, float x, float y)
 	{
-		constexpr float falloffSpacing = 3.5f;
-		float dx = std::abs(x + 1 - viewOffsetX);
-		float dy = std::abs(y + 1 - viewOffsetY);
-		float d = std::max(dx, dy);
-		float dEdge = (w/2 - d);
+		// constexpr float falloffSpacing = 3.5f;
+		// float dx = std::abs(x + 1 - viewOffsetX);
+		// float dy = std::abs(y + 1 - viewOffsetY);
+		// float d = std::max(dx, dy);
+		// float dEdge = (w/2 - d);
 
 
-		float ratio = dEdge / falloffSpacing;
+		// float ratio = dEdge / falloffSpacing;
 
-		float alpha = std::min(a * ratio, 255.1f);
+		// float alpha = std::min(a * ratio, 255.1f);
 		
-		return (int) std::floor(alpha);
+		// return (int) std::floor(alpha);
+		return a;
 	};
 
 	// Top Mesh
@@ -75,8 +76,9 @@ void Grid::UpdateMeshes(){
 			return (GLubyte)(int)(std::ceil(std::min(semiBrighten * v, 254.99f)));
 		};
 
-		for(int i = i0; i < i1; i++){
-			for(int j = j0; j < j1; j++){
+		// TODO flip the representation so we iterate in order of data
+		for(int i = i1 - 1; i >= i0; i--){
+			for(int j = j1 - 1; j >= j0; j--){
 				Block& block = blocks[i * MaxWidth + j];
 
 				int xo = j;
@@ -153,8 +155,9 @@ void Grid::UpdateMeshes(){
 		GLuint vertexOffset = 0;
 		GLuint indexOffset = 0;
 
-		for(int i = i0; i < i1; i++){
-			for(int j = j0; j < j1; j++){
+		// TODO chop unseen parts of grid
+		for(int i = i1 - 1; i >= i0; i--){
+			for(int j = j1 - 1; j >= j0; j--){
 				Block& block = blocks[i * MaxWidth + j];
 
 				int xo = j;
@@ -306,7 +309,7 @@ void Grid::Update(){
 
 void Grid::Draw(){
 	UpdateMeshes();
-	gridTopsMesh.Draw(g_shaders.shader1);
 	gridBottomsMesh.Draw(g_shaders.shader1);
+	gridTopsMesh.Draw(g_shaders.shader1);
 }
 

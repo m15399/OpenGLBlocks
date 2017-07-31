@@ -13,7 +13,7 @@ class Camera {
 
 public:
 
-	float defaultCameraDistance = 1.f * 40.f;
+	float defaultCameraDistance = 1.f * 20.f;
 	float cameraDistance = defaultCameraDistance;
 
 	glm::vec3 eye, center, up;

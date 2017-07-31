@@ -12,6 +12,10 @@ void Window::Init(){
 	}
 
 
+	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
+
 	uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
 #if 0

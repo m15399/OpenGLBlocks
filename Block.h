@@ -7,6 +7,7 @@ class Block {
 public:
 
 	int x, y;
+	float seed;
 	GLfloat z;
 	GLubyte topColor[4];
 	GLubyte bottomColor[4];

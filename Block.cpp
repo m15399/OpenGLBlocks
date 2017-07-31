@@ -3,25 +3,30 @@
 
 #include "Block.h"
 #include "Time.h"
+#include "Utils.h"
 
 void Block::Init(int x2, int y2){
 	x = x2;
 	y = y2;
 
-	topColor[0] = 120;
-	topColor[1] = 180;
-	topColor[2] = 255;
+	seed = Random(0.f, 1.f);
+
+	topColor[0] = 100;
+	topColor[1] = 185;
+	topColor[2] = 105;
 	topColor[3] = 255;
 
-	bottomColor[0] = 120;
-	bottomColor[1] = 180;
-	bottomColor[2] = 225;
+	bottomColor[0] = 80;
+	bottomColor[1] = 160;
+	bottomColor[2] = 140;
 	bottomColor[3] = 255;
 
 }
 
 void Block::Update(){
 	float t = (g_time.time % 1000000) / 1000.f;
-	// t = (x + y) * .1f;
-	z = (GLfloat)(std::sin(t + x/10.f + y/4.f) * 1.0f);
+	t = (x / 2 + y) * .1f;
+	z = (GLfloat)(std::sin(t + x/10.f + y/4.f) * .5f);
+	// z = 0;
+	z += seed * .2;
 }

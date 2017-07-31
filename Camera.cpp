@@ -25,13 +25,13 @@ void Camera::Update(){
 	
 	float x = g_grid.viewOffsetX;
 	float y = g_grid.viewOffsetY;
-	CenterOn(glm::vec3(x, y, -5), cameraDistance);
+	CenterOn(glm::vec3(x, y, 0), cameraDistance);
 
 
 }
 
 void Camera::CenterOn(const glm::vec3 &point, float distance){
-	eye = glm::vec3(-distance, -distance, distance);
+	eye = glm::vec3(point.x - distance, point.y - distance, point.z + distance * 1.25f);
 	center = point;
 	up = glm::vec3(0, 0, 1);
 	dirtyMatrix = true;
@@ -42,7 +42,7 @@ glm::mat4 Camera::GetViewProjMatrix(){
 		viewMatrix = glm::lookAt(eye, center, up);
 
 		float aspect = (float) g_window.width / g_window.height;
-		projMatrix = glm::perspective(glm::radians(30.0f), aspect, .1f, 10000.f);
+		projMatrix = glm::perspective(glm::radians(30.0f), aspect, 1.0f, 100.f);
 
 		viewProjMatrix = projMatrix * viewMatrix;
 		dirtyMatrix = false;
