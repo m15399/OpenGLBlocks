@@ -14,6 +14,9 @@ high dpi
 */
 
 #include <iostream>
+#include <thread>
+#include <atomic>
+#include <vector>
 
 #include "SDL.h"
 #include "Window.h"
@@ -23,6 +26,7 @@ high dpi
 #include "Camera.h"
 #include "Time.h"
 #include "Input.h"
+#include "Globals.h"
 
 bool running = true;
 
@@ -72,12 +76,37 @@ int main(){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		g_grid.Update();
+
+		std::atomic<int> chunk;
+		chunk = 0;
+		constexpr int numChunks = 4;
+		
+		auto UpdateGridChunk = [&chunk, numChunks](){
+			g_grid.UpdateMeshes(chunk++, numChunks);
+		};
+
+		std::vector<std::thread> threads;
+		threads.reserve(numChunks);
+
+		for(int i = 0; i < numChunks; i++){
+			threads.emplace_back(UpdateGridChunk);
+		}
+		for(int i = 0; i < numChunks; i++){
+			threads[i].join();
+		}
+
+		g_grid.PushMeshes();
+
 		g_camera.Update();
 
 		g_grid.Draw();
 
 		g_window.Draw();
 
+		if(g_input.KeyPressed(SDL_SCANCODE_GRAVE)){
+			g_globals.debug = !g_globals.debug;
+			std::cout << "Debug = " << g_globals.debug << "\n";
+		}
 		if(g_input.KeyPressed(SDL_SCANCODE_F1)){
 			g_window.ToggleFullscreen();
 		}

@@ -24,9 +24,9 @@ void Block::Init(int x2, int y2){
 }
 
 void Block::Update(){
-	float t = (g_time.time % 1000000) / 1000.f;
-	t = (x / 2 + y) * .1f;
-	z = (GLfloat)(std::sin(t + x/10.f + y/4.f) * .5f);
-	// z = 0;
-	z += seed * .2;
+	float t = (g_time.time % 1000000) / 1000.f + x/10.f + y/4.f;
+	// t = (x) * 1.1f;
+	z = (GLfloat)(std::sin(t) * 1.5f);
+	z = 0;
+	// z += seed * .2;
 }

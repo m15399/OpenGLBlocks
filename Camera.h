@@ -16,6 +16,9 @@ public:
 	float defaultCameraDistance = 1.f * 20.f;
 	float cameraDistance = defaultCameraDistance;
 
+	float rotationX = 0;
+	float offsetY = 0;
+
 	glm::vec3 eye, center, up;
 
 	void Init();

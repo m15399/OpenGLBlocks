@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Time.h"
+#include "Globals.h"
 
 Time g_time;
 
@@ -37,12 +38,10 @@ void Time::Update(){
 		fps = framesThisInterval * 1000 / fpsMeasurementIntervalMs; 
 		framesThisInterval = 0;
 
-		std::cout << "FPS: " << fps << "\n";
+		if(g_globals.debug){
+			std::cout << "FPS: " << fps << "\n";
+		}
 	}
-}
-
-float Time::GetFps(){
-	return 0;
 }
 
 

@@ -10,7 +10,7 @@ float dt();
 class Time {
 public:
 
-	static constexpr uint64_t fpsMeasurementIntervalMs = 1000;
+	static constexpr uint64_t fpsMeasurementIntervalMs = 500;
 
 	uint64_t framesThisInterval;
 	uint64_t time;
@@ -22,8 +22,6 @@ public:
 
 	void Init();
 	void Update();
-
-	float GetFps();
 
 };
 
