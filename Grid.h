@@ -32,8 +32,8 @@ public:
 
 	Block blocks[MaxWidth * MaxWidth];
 
-	float viewOffsetX = Width/2;
-	float viewOffsetY = Width/2;
+	float viewOffsetX = 0;//Width/2;
+	float viewOffsetY = 0;//Width/2;
 
 	void Init();
 	void Update();

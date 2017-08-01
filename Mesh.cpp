@@ -63,8 +63,11 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 
 
 	glEnableVertexAttribArray(shader.a_positionLoc);
+	glEnableVertexAttribArray(shader.a_normalLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, a_positionBuffer);
-	glVertexAttribPointer(shader.a_positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glVertexAttribPointer(shader.a_positionLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GL_FLOAT), nullptr);
+	glVertexAttribPointer(shader.a_normalLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GL_FLOAT), 
+		(void*) (3 * sizeof(GL_FLOAT)));
 
 	glEnableVertexAttribArray(shader.a_colorLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, a_colorBuffer);
@@ -82,6 +85,7 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 
 	glDisableVertexAttribArray(shader.a_colorLoc);
 	glDisableVertexAttribArray(shader.a_positionLoc);
+	glDisableVertexAttribArray(shader.a_normalLoc);
 
 	if(shader.a_boneIndexLoc != -1){
 		glDisableVertexAttribArray(shader.a_boneIndexLoc);

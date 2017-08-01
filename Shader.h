@@ -9,6 +9,7 @@
 //
 #define SHADER_ATTRIB_LIST(F) \
 	F(a_position) \
+	F(a_normal) \
 	F(a_color) \
 	F(a_boneIndex)
 

@@ -8,7 +8,6 @@ public:
 	void Init();
 
 	Mesh cube;
-	Mesh tube;
 	Mesh square;
 };
 

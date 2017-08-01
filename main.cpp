@@ -4,9 +4,13 @@
 TODO
 
 block bottom shader
-alpha fading on edges is not quite right
+	pass normals
 ridiculous cpu usage when not focused
 use triangle strips for grid
+threading
+	update 1/4 blocks, push 1/4 geometry...
+	only update visible blocks
+task system?
 
 fix fullscreen
 high dpi
@@ -75,33 +79,44 @@ int main(){
 		glClearColor(0, .25, .45, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		g_grid.Update();
+		// Update
+		{
+#if 0
+			g_grid.Update();
 
-		std::atomic<int> chunk;
-		chunk = 0;
-		constexpr int numChunks = 4;
-		
-		auto UpdateGridChunk = [&chunk, numChunks](){
-			g_grid.UpdateMeshes(chunk++, numChunks);
-		};
+			std::atomic<int> chunk;
+			chunk = 0;
+			constexpr int numChunks = 4;
+			
+			auto UpdateGridChunk = [&chunk, numChunks](){
+				g_grid.UpdateMeshes(chunk++, numChunks);
+			};
 
-		std::vector<std::thread> threads;
-		threads.reserve(numChunks);
+			std::vector<std::thread> threads;
+			threads.reserve(numChunks);
 
-		for(int i = 0; i < numChunks; i++){
-			threads.emplace_back(UpdateGridChunk);
+			for(int i = 0; i < numChunks; i++){
+				threads.emplace_back(UpdateGridChunk);
+			}
+			for(int i = 0; i < numChunks; i++){
+				threads[i].join();
+			}
+
+			g_grid.PushMeshes();
+#endif
+
+
+			g_camera.Update();
 		}
-		for(int i = 0; i < numChunks; i++){
-			threads[i].join();
+
+		// Draw
+		{
+			// g_grid.Draw();
+
+			g_primitives.cube.Draw(g_shaders.shader1);
+
+			g_window.Draw();
 		}
-
-		g_grid.PushMeshes();
-
-		g_camera.Update();
-
-		g_grid.Draw();
-
-		g_window.Draw();
 
 		if(g_input.KeyPressed(SDL_SCANCODE_GRAVE)){
 			g_globals.debug = !g_globals.debug;
