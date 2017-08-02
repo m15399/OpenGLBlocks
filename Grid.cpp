@@ -22,6 +22,40 @@ void Grid::Init(){
 	}
 }
 
+inline void PushVertex(GLfloat* vertices, GLubyte* colors, int* currVertex,
+	float x, float y, float z, float nx, float ny, float nz,
+	GLubyte r, GLubyte g, GLubyte b, GLubyte a){
+
+	int vertexOffset = *currVertex;
+
+	vertices[vertexOffset * 6 + 0] = x;
+	vertices[vertexOffset * 6 + 1] = y;
+	vertices[vertexOffset * 6 + 2] = z;
+	vertices[vertexOffset * 6 + 3] = nx;
+	vertices[vertexOffset * 6 + 4] = ny;
+	vertices[vertexOffset * 6 + 5] = nz;
+
+	colors[vertexOffset * 4 + 0] = r;
+	colors[vertexOffset * 4 + 1] = g;
+	colors[vertexOffset * 4 + 2] = b;
+	colors[vertexOffset * 4 + 3] = a;
+
+	(*currVertex)++;
+}
+
+inline void PushTri(GLuint* indeces, int* currTri, int vertexOffset,
+	GLuint a, GLuint b, GLuint c){
+
+	int triOffset = *currTri;
+
+	indeces[triOffset * 3 + 0] = vertexOffset + a;
+	indeces[triOffset * 3 + 1] = vertexOffset + b;
+	indeces[triOffset * 3 + 2] = vertexOffset + c;
+
+	(*currTri)++;
+}
+
+
 void Grid::UpdateMeshes(int chunk, int numChunks){
 	constexpr int maxW = MaxWidth;
 	constexpr int w = Width;
@@ -34,14 +68,16 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 
 	int squaresPerChunk = nSquares / numChunks;
 	int verticesTopPerChunk = 4 * squaresPerChunk;
-	int indecesTopPerChunk = 6 * squaresPerChunk;
+	int trisTopPerChunk = 2 * squaresPerChunk;
 	int verticesBottomPerChunk = 8 * squaresPerChunk;
-	int indecesBottomPerChunk = 8 * squaresPerChunk;
+	int trisBottomPerChunk = 4 * squaresPerChunk;
 
 	// Top Mesh
 
 	GLuint vertexOffset = verticesTopPerChunk * chunk;
-	GLuint indexOffset = indecesTopPerChunk * chunk;
+	GLuint triOffset = trisTopPerChunk * chunk;
+
+	#if 1
 
 	auto Brighten = [](GLubyte v){
 		float brighten = 1.04f;
@@ -81,59 +117,41 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 				zo = block.z;
 			}
 
-			verticesTop[(vertexOffset + 0) * 3 + 0] = .5f + xo;
-			verticesTop[(vertexOffset + 0) * 3 + 1] = .5f + yo;
-			verticesTop[(vertexOffset + 0) * 3 + 2] = zo;
+			int currVertex = vertexOffset;
+			int currTri = triOffset;
 
-			verticesTop[(vertexOffset + 1) * 3 + 0] = -.5f + xo;
-			verticesTop[(vertexOffset + 1) * 3 + 1] = .5f + yo;
-			verticesTop[(vertexOffset + 1) * 3 + 2] = zo;
+			#define PV(x, y, z, nx, ny, nz, r, g, b) \
+				PushVertex(verticesTop, colorsTop, &currVertex, \
+					x, y, z, nx, ny, nz, \
+					r, g, b, a)
 
-			verticesTop[(vertexOffset + 2) * 3 + 0] = -.5f + xo;
-			verticesTop[(vertexOffset + 2) * 3 + 1] = -.5f + yo;
-			verticesTop[(vertexOffset + 2) * 3 + 2] = zo;
+			#define PT(a, b, c) \
+				PushTri(indecesTop, &currTri, vertexOffset, \
+					a, b, c)
 
-			verticesTop[(vertexOffset + 3) * 3 + 0] = .5f + xo;
-			verticesTop[(vertexOffset + 3) * 3 + 1] = -.5f + yo;
-			verticesTop[(vertexOffset + 3) * 3 + 2] = zo;
+			PV(.5f + xo, .5f + yo, zo,     0, 0, 1, Brighten(r), Brighten(g), Brighten(b));
+			PV(-.5f + xo, .5f + yo, zo,    0, 0, 1, r, g, b);
+			PV(-.5f + xo, -.5f + yo, zo,   0, 0, 1, r, g, b);
+			PV(.5f + xo, -.5f + yo, zo,    0, 0, 1, SemiBrighten(r), SemiBrighten(g), SemiBrighten(b));
+			
+			// TODO these never change so just push them once
+			PT(0, 1, 2);
+			PT(0, 2, 3);
 
-			colorsTop[(vertexOffset + 0) * 4 + 0] = (GLubyte) Brighten(r);
-			colorsTop[(vertexOffset + 0) * 4 + 1] = (GLubyte) Brighten(g);
-			colorsTop[(vertexOffset + 0) * 4 + 2] = (GLubyte) Brighten(b);
-			colorsTop[(vertexOffset + 0) * 4 + 3] = (GLubyte) a;
+			#undef PT
+			#undef PV
 
-			colorsTop[(vertexOffset + 1) * 4 + 0] = (GLubyte) r;
-			colorsTop[(vertexOffset + 1) * 4 + 1] = (GLubyte) g;
-			colorsTop[(vertexOffset + 1) * 4 + 2] = (GLubyte) b;
-			colorsTop[(vertexOffset + 1) * 4 + 3] = (GLubyte) a;
-
-			colorsTop[(vertexOffset + 2) * 4 + 0] = (GLubyte) r;
-			colorsTop[(vertexOffset + 2) * 4 + 1] = (GLubyte) g;
-			colorsTop[(vertexOffset + 2) * 4 + 2] = (GLubyte) b;
-			colorsTop[(vertexOffset + 2) * 4 + 3] = (GLubyte) a;
-
-			colorsTop[(vertexOffset + 3) * 4 + 0] = (GLubyte) SemiBrighten(r);
-			colorsTop[(vertexOffset + 3) * 4 + 1] = (GLubyte) SemiBrighten(g);
-			colorsTop[(vertexOffset + 3) * 4 + 2] = (GLubyte) SemiBrighten(b);
-			colorsTop[(vertexOffset + 3) * 4 + 3] = (GLubyte) a;
-
-			// TODO these are always the same
-			indecesTop[indexOffset + 0] = vertexOffset + 0;
-			indecesTop[indexOffset + 1] = vertexOffset + 1;
-			indecesTop[indexOffset + 2] = vertexOffset + 2;
-			indecesTop[indexOffset + 3] = vertexOffset + 0;
-			indecesTop[indexOffset + 4] = vertexOffset + 2;
-			indecesTop[indexOffset + 5] = vertexOffset + 3;
-
-			vertexOffset += 4;
-			indexOffset += 6;
+			vertexOffset = currVertex;
+			triOffset = currTri;
 		}
 	}
+	#endif
 
 	// Bottom mesh
+	#if 1
 
 	vertexOffset = verticesBottomPerChunk * chunk;
-	indexOffset = indecesBottomPerChunk * chunk;
+	triOffset = trisBottomPerChunk * chunk;
 
 	// TODO chop unseen parts of grid
 	for(int i = rowOffset; i < rowOffset + rowsPerChunk; i++){
@@ -143,7 +161,6 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 			GLubyte g = 0;
 			GLubyte b = 0;
 			GLubyte a = 0;
-			GLubyte bottomA = 0;
 
 			GLfloat zo = -10000;
 
@@ -160,121 +177,47 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 				g = block.bottomColor[1];
 				b = block.bottomColor[2];
 				a = block.bottomColor[3];
-				bottomA = a;
 
 				zo = block.z;
 			}
 
 			float height = 10;
 
-			verticesBottom[(vertexOffset + 0) * 3 + 0] = .5f + xo;
-			verticesBottom[(vertexOffset + 0) * 3 + 1] = .5f + yo;
-			verticesBottom[(vertexOffset + 0) * 3 + 2] = zo;
+			int currVertex = vertexOffset;
+			int currTri = triOffset;
 
-			verticesBottom[(vertexOffset + 1) * 3 + 0] = -.5f + xo;
-			verticesBottom[(vertexOffset + 1) * 3 + 1] = .5f + yo;
-			verticesBottom[(vertexOffset + 1) * 3 + 2] = zo;
+			#define PV(x, y, z, nx, ny, nz) \
+				PushVertex(verticesBottom, colorsBottom, &currVertex, \
+					x, y, z, nx, ny, nz, \
+					r, g, b, a)
 
-			verticesBottom[(vertexOffset + 2) * 3 + 0] = -.5f + xo;
-			verticesBottom[(vertexOffset + 2) * 3 + 1] = -.5f + yo;
-			verticesBottom[(vertexOffset + 2) * 3 + 2] = zo;
+			#define PT(a, b, c) \
+				PushTri(indecesBottom, &currTri, vertexOffset, \
+					a, b, c)
 
-			verticesBottom[(vertexOffset + 3) * 3 + 0] = .5f + xo;
-			verticesBottom[(vertexOffset + 3) * 3 + 1] = -.5f + yo;
-			verticesBottom[(vertexOffset + 3) * 3 + 2] = zo;
+			PV(.5f + xo, -.5f + yo, zo,              0, -1, 0);
+			PV(-.5f + xo, -.5f + yo, zo,             0, -1, 0);
+			PV(-.5f + xo, -.5f + yo, -height + zo,   0, -1, 0);
+			PV(.5f + xo, -.5f + yo, -height + zo,    0, -1, 0);
 
-			verticesBottom[(vertexOffset + 4) * 3 + 0] = .5f + xo;
-			verticesBottom[(vertexOffset + 4) * 3 + 1] = .5f + yo;
-			verticesBottom[(vertexOffset + 4) * 3 + 2] = zo - height;
+			PV(-.5f + xo, -.5f + yo, zo,             -1, 0, 0);
+			PV(-.5f + xo, .5f + yo, zo,              -1, 0, 0);
+			PV(-.5f + xo, .5f + yo, -height + zo,    -1, 0, 0);
+			PV(-.5f + xo, -.5f + yo, -height + zo,   -1, 0, 0);
+			
+			PT(0, 1, 2);
+			PT(0, 2, 3);
+			PT(4, 5, 6);
+			PT(4, 6, 7);
 
-			verticesBottom[(vertexOffset + 5) * 3 + 0] = -.5f + xo;
-			verticesBottom[(vertexOffset + 5) * 3 + 1] = .5f + yo;
-			verticesBottom[(vertexOffset + 5) * 3 + 2] = zo - height;
+			#undef PT
+			#undef PV
 
-			verticesBottom[(vertexOffset + 6) * 3 + 0] = -.5f + xo;
-			verticesBottom[(vertexOffset + 6) * 3 + 1] = -.5f + yo;
-			verticesBottom[(vertexOffset + 6) * 3 + 2] = zo - height;
-
-			verticesBottom[(vertexOffset + 7) * 3 + 0] = .5f + xo;
-			verticesBottom[(vertexOffset + 7) * 3 + 1] = -.5f + yo;
-			verticesBottom[(vertexOffset + 7) * 3 + 2] = zo - height;
-
-			colorsBottom[(vertexOffset + 0) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 0) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 0) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 0) * 4 + 3] = (GLubyte) a;
-
-			colorsBottom[(vertexOffset + 1) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 1) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 1) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 1) * 4 + 3] = (GLubyte) a;
-
-			colorsBottom[(vertexOffset + 2) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 2) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 2) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 2) * 4 + 3] = (GLubyte) a;
-
-			colorsBottom[(vertexOffset + 3) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 3) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 3) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 3) * 4 + 3] = (GLubyte) a;
-
-			colorsBottom[(vertexOffset + 4) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 4) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 4) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 4) * 4 + 3] = (GLubyte) bottomA;
-
-			colorsBottom[(vertexOffset + 5) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 5) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 5) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 5) * 4 + 3] = (GLubyte) bottomA;
-
-			colorsBottom[(vertexOffset + 6) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 6) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 6) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 6) * 4 + 3] = (GLubyte) bottomA;
-
-			colorsBottom[(vertexOffset + 7) * 4 + 0] = (GLubyte) r;
-			colorsBottom[(vertexOffset + 7) * 4 + 1] = (GLubyte) g;
-			colorsBottom[(vertexOffset + 7) * 4 + 2] = (GLubyte) b;
-			colorsBottom[(vertexOffset + 7) * 4 + 3] = (GLubyte) bottomA;
-
-			indecesBottom[(indexOffset + 0) * 3 + 0] = vertexOffset + 0;
-			indecesBottom[(indexOffset + 0) * 3 + 1] = vertexOffset + 3;
-			indecesBottom[(indexOffset + 0) * 3 + 2] = vertexOffset + 7;
-
-			indecesBottom[(indexOffset + 1) * 3 + 0] = vertexOffset + 0;
-			indecesBottom[(indexOffset + 1) * 3 + 1] = vertexOffset + 7;
-			indecesBottom[(indexOffset + 1) * 3 + 2] = vertexOffset + 4;
-
-			indecesBottom[(indexOffset + 2) * 3 + 0] = vertexOffset + 0;
-			indecesBottom[(indexOffset + 2) * 3 + 1] = vertexOffset + 4;
-			indecesBottom[(indexOffset + 2) * 3 + 2] = vertexOffset + 5;
-
-			indecesBottom[(indexOffset + 3) * 3 + 0] = vertexOffset + 0;
-			indecesBottom[(indexOffset + 3) * 3 + 1] = vertexOffset + 5;
-			indecesBottom[(indexOffset + 3) * 3 + 2] = vertexOffset + 1;
-
-			indecesBottom[(indexOffset + 4) * 3 + 0] = vertexOffset + 6;
-			indecesBottom[(indexOffset + 4) * 3 + 1] = vertexOffset + 2;
-			indecesBottom[(indexOffset + 4) * 3 + 2] = vertexOffset + 1;
-
-			indecesBottom[(indexOffset + 5) * 3 + 0] = vertexOffset + 6;
-			indecesBottom[(indexOffset + 5) * 3 + 1] = vertexOffset + 1;
-			indecesBottom[(indexOffset + 5) * 3 + 2] = vertexOffset + 5;
-
-			indecesBottom[(indexOffset + 6) * 3 + 0] = vertexOffset + 6;
-			indecesBottom[(indexOffset + 6) * 3 + 1] = vertexOffset + 7;
-			indecesBottom[(indexOffset + 6) * 3 + 2] = vertexOffset + 3;
-
-			indecesBottom[(indexOffset + 7) * 3 + 0] = vertexOffset + 6;
-			indecesBottom[(indexOffset + 7) * 3 + 1] = vertexOffset + 3;
-			indecesBottom[(indexOffset + 7) * 3 + 2] = vertexOffset + 2;
-
-			vertexOffset += 8;
-			indexOffset += 8;
+			vertexOffset = currVertex;
+			triOffset = currTri;
 		}
 	}
+	#endif
 }
 
 void Grid::PushMeshes(){
@@ -283,6 +226,7 @@ void Grid::PushMeshes(){
 }
 
 void Grid::Update(){
+	// TODO update in parallel
 	for(int i = 0; i < MaxWidth; i++){
 		for (int j = 0; j < MaxWidth; j++){
 			Block& block = blocks[i * MaxWidth + j];

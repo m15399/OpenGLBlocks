@@ -46,7 +46,7 @@ void Mesh::SetIndeces(const GLuint* indeces, int count){
 
 void Mesh::Set(const GLfloat* vertices, const GLubyte* colors, int numVertices,
 			const GLuint* indeces, int numTris){
-	SetVertices(vertices, numVertices * 3);
+	SetVertices(vertices, numVertices * 6);
 	SetColors(colors, numVertices * 4);
 	SetIndeces(indeces, numTris * 3);
 }

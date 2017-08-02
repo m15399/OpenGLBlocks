@@ -7,10 +7,10 @@ Primitives g_primitives;
 
 
 GLfloat squareVertices[] = {
-	.5f, .5f, .5f,
-	-.5f, .5f, .5f,
-	-.5f, -.5f, .5f,
-	.5f, -.5f, .5f,
+	.5f, .5f, 0.f,   0, 0, 1,
+	-.5f, .5f, 0.f,  0, 0, 1,
+	-.5f, -.5f, 0.f, 0, 0, 1,
+	.5f, -.5f, 0.f,  0, 0, 1
 };
 
 GLubyte squareColors[] = {
@@ -86,8 +86,6 @@ static const GLubyte cubeColors[] = {
 	0, 255, 255, 255,
 	255, 255, 255, 255,
 	255, 255, 255, 255,
-
-	
 };
 
 static const GLuint cubeIndeces[] = {

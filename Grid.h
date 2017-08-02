@@ -17,13 +17,13 @@ public:
 	static constexpr int nTrisTop = nSquares * 2;
 	
 	static constexpr int nVerticesBottom = nSquares * 8;
-	static constexpr int nTrisBottom = nSquares * 8;
+	static constexpr int nTrisBottom = nSquares * 4;
 
-	GLfloat verticesTop[nVerticesTop * 3] = {0};
+	GLfloat verticesTop[nVerticesTop * 6] = {0};
 	GLubyte colorsTop[nVerticesTop * 4] = {0};
 	GLuint indecesTop[nTrisTop * 3] = {0};
 
-	GLfloat verticesBottom[nVerticesBottom * 3] = {0};
+	GLfloat verticesBottom[nVerticesBottom * 6] = {0};
 	GLubyte colorsBottom[nVerticesBottom * 4] = {0};
 	GLuint indecesBottom[nTrisBottom * 3] = {0};
 
@@ -32,8 +32,8 @@ public:
 
 	Block blocks[MaxWidth * MaxWidth];
 
-	float viewOffsetX = 0;//Width/2;
-	float viewOffsetY = 0;//Width/2;
+	float viewOffsetX = Width/2;
+	float viewOffsetY = Width/2;
 
 	void Init();
 	void Update();

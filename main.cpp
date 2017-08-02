@@ -81,7 +81,7 @@ int main(){
 
 		// Update
 		{
-#if 0
+#if 1
 			g_grid.Update();
 
 			std::atomic<int> chunk;
@@ -97,9 +97,10 @@ int main(){
 
 			for(int i = 0; i < numChunks; i++){
 				threads.emplace_back(UpdateGridChunk);
+				// UpdateGridChunk();
 			}
-			for(int i = 0; i < numChunks; i++){
-				threads[i].join();
+			for(auto& thread : threads){
+				thread.join();
 			}
 
 			g_grid.PushMeshes();
@@ -111,9 +112,9 @@ int main(){
 
 		// Draw
 		{
-			// g_grid.Draw();
+			g_grid.Draw();
 
-			g_primitives.cube.Draw(g_shaders.shader1);
+			// g_primitives.cube.Draw(g_shaders.shader1);
 
 			g_window.Draw();
 		}
