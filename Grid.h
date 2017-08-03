@@ -36,6 +36,7 @@ public:
 	float viewOffsetY = Width/2;
 
 	void Init();
+	Block* GetBlock(int x, int y);
 	void Update();
 	void UpdateMeshes(int chunk, int numChunks);
 	void PushMeshes();

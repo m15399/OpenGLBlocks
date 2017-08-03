@@ -13,3 +13,11 @@ int Random(int low, int high){
 	int randInt = rand();
 	return (randInt % (high - low)) + low;
 }
+
+float Clamp(float v, float a, float b){
+	if(v < a)
+		return a;
+	if(v > b)
+		return b;
+	return v;
+}

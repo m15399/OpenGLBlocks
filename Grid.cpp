@@ -22,6 +22,14 @@ void Grid::Init(){
 	}
 }
 
+Block* Grid::GetBlock(int x, int y){
+	if(y >= 0 && y < MaxWidth && x >= 0 && x < MaxWidth)
+		return &blocks[y * MaxWidth + x];
+	else
+		return nullptr;
+}
+
+
 inline void PushVertex(GLfloat* vertices, GLubyte* colors, int* currVertex,
 	float x, float y, float z, float nx, float ny, float nz,
 	GLubyte r, GLubyte g, GLubyte b, GLubyte a){
@@ -230,7 +238,15 @@ void Grid::Update(){
 	for(int i = 0; i < MaxWidth; i++){
 		for (int j = 0; j < MaxWidth; j++){
 			Block& block = blocks[i * MaxWidth + j];
-			block.Update();
+			block.UpdateHeights();
+		}
+	}
+
+	// This must be done after all the heights are worked out
+	for(int i = 0; i < MaxWidth; i++){
+		for (int j = 0; j < MaxWidth; j++){
+			Block& block = blocks[i * MaxWidth + j];
+			block.UpdateLighting();
 		}
 	}
 

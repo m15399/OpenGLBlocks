@@ -3,10 +3,13 @@
 
 TODO
 
-block bottom shader
-	pass normals
+switch back to a shared vOffset buffer?
+some sort of vertexdata class
+	allocate based on verts, faces
+	push vert, push face functions
+	update colors
+	update buffers (only updates what was changed)
 ridiculous cpu usage when not focused
-use triangle strips for grid
 threading
 	update 1/4 blocks, push 1/4 geometry...
 	only update visible blocks
@@ -46,7 +49,6 @@ int main(){
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	 // TODO this isn't quite right
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 

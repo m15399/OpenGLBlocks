@@ -13,6 +13,7 @@ public:
 	GLubyte bottomColor[4];
 
 	void Init(int x, int y);
-	void Update();
+	void UpdateHeights();
+	void UpdateLighting();
 
 };
