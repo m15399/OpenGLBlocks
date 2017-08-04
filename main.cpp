@@ -34,6 +34,7 @@ high dpi
 #include "Time.h"
 #include "Input.h"
 #include "Globals.h"
+#include "Player.h"
 
 bool running = true;
 
@@ -83,6 +84,7 @@ int main(){
 
 		// Update
 		{
+			g_player.Update();
 #if 1
 			g_grid.Update();
 
@@ -115,8 +117,7 @@ int main(){
 		// Draw
 		{
 			g_grid.Draw();
-
-			// g_primitives.cube.Draw(g_shaders.shader1);
+			g_player.Draw();
 
 			g_window.Draw();
 		}

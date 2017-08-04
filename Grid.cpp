@@ -7,6 +7,7 @@
 #include "Utils.h"
 #include "Time.h"
 #include "Input.h"
+#include "Player.h"
 
 Grid g_grid;
 
@@ -87,24 +88,11 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 
 	#if 1
 
-	auto Brighten = [](GLubyte v){
-		float brighten = 1.04f;
-		return (GLubyte)(int)(std::ceil(std::min(brighten * v, 254.99f)));
-	};
-
-	auto SemiBrighten = [](GLubyte v){
-		float semiBrighten = 1.02f;
-		return (GLubyte)(int)(std::ceil(std::min(semiBrighten * v, 254.99f)));
-	};
-
 	// TODO flip the representation so we iterate in order of data
 	for(int i = rowOffset; i < rowOffset + rowsPerChunk; i++){
 		for(int j = 0; j < w; j++){
 
-			GLubyte r = 0;
-			GLubyte g = 0;
-			GLubyte b = 0;
-			GLubyte a = 0;
+			Color baseColor(0, 0, 0, 0);
 
 			GLfloat zo = -10000;
 
@@ -117,30 +105,32 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 			if(blockRow >= 0 && blockRow < maxW && blockColumn >= 0 && blockColumn < maxW){
 				Block& block = blocks[blockRow * MaxWidth + blockColumn];
 
-				r = block.topColor[0];
-				g = block.topColor[1];
-				b = block.topColor[2];
-				a = block.topColor[3];
-
+				baseColor = block.topColor;
 				zo = block.z;
 			}
+
+			Color brightened = baseColor;
+			brightened.Brighten(1.04f);
+
+			Color semiBrightened = baseColor;
+			semiBrightened.Brighten(1.02f);
 
 			int currVertex = vertexOffset;
 			int currTri = triOffset;
 
-			#define PV(x, y, z, nx, ny, nz, r, g, b) \
+			#define PV(x, y, z, nx, ny, nz, color) \
 				PushVertex(verticesTop, colorsTop, &currVertex, \
 					x, y, z, nx, ny, nz, \
-					r, g, b, a)
+					color.r, color.g, color.b, color.a)
 
 			#define PT(a, b, c) \
 				PushTri(indecesTop, &currTri, vertexOffset, \
 					a, b, c)
 
-			PV(.5f + xo, .5f + yo, zo,     0, 0, 1, Brighten(r), Brighten(g), Brighten(b));
-			PV(-.5f + xo, .5f + yo, zo,    0, 0, 1, r, g, b);
-			PV(-.5f + xo, -.5f + yo, zo,   0, 0, 1, r, g, b);
-			PV(.5f + xo, -.5f + yo, zo,    0, 0, 1, SemiBrighten(r), SemiBrighten(g), SemiBrighten(b));
+			PV(.5f + xo, .5f + yo, zo,     0, 0, 1, brightened);
+			PV(-.5f + xo, .5f + yo, zo,    0, 0, 1, baseColor);
+			PV(-.5f + xo, -.5f + yo, zo,   0, 0, 1, baseColor);
+			PV(.5f + xo, -.5f + yo, zo,    0, 0, 1, semiBrightened);
 			
 			// TODO these never change so just push them once
 			PT(0, 1, 2);
@@ -165,10 +155,7 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 	for(int i = rowOffset; i < rowOffset + rowsPerChunk; i++){
 		for(int j = 0; j < w; j++){
 
-			GLubyte r = 0;
-			GLubyte g = 0;
-			GLubyte b = 0;
-			GLubyte a = 0;
+			Color baseColor;
 
 			GLfloat zo = -10000;
 
@@ -181,11 +168,7 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 			if(blockRow >= 0 && blockRow < maxW && blockColumn >= 0 && blockColumn < maxW){
 				Block& block = blocks[blockRow * MaxWidth + blockColumn];
 
-				r = block.bottomColor[0];
-				g = block.bottomColor[1];
-				b = block.bottomColor[2];
-				a = block.bottomColor[3];
-
+				baseColor = block.bottomColor;
 				zo = block.z;
 			}
 
@@ -197,7 +180,7 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 			#define PV(x, y, z, nx, ny, nz) \
 				PushVertex(verticesBottom, colorsBottom, &currVertex, \
 					x, y, z, nx, ny, nz, \
-					r, g, b, a)
+					baseColor.r, baseColor.g, baseColor.b, baseColor.a)
 
 			#define PT(a, b, c) \
 				PushTri(indecesBottom, &currTri, vertexOffset, \
@@ -234,6 +217,9 @@ void Grid::PushMeshes(){
 }
 
 void Grid::Update(){
+	viewOffsetX = g_player.x;
+	viewOffsetY = g_player.y;
+
 	// TODO update in parallel
 	for(int i = 0; i < MaxWidth; i++){
 		for (int j = 0; j < MaxWidth; j++){
@@ -248,20 +234,6 @@ void Grid::Update(){
 			Block& block = blocks[i * MaxWidth + j];
 			block.UpdateLighting();
 		}
-	}
-
-	float speed = 4.f * dt();
-	if(g_input.KeyDown(SDL_SCANCODE_LEFT)){
-		viewOffsetX -= speed;
-	}
-	if(g_input.KeyDown(SDL_SCANCODE_RIGHT)){
-		viewOffsetX += speed;
-	}
-	if(g_input.KeyDown(SDL_SCANCODE_UP)){
-		viewOffsetY += speed;
-	}
-	if(g_input.KeyDown(SDL_SCANCODE_DOWN)){
-		viewOffsetY -= speed;
 	}
 }
 

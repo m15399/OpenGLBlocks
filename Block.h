@@ -1,7 +1,10 @@
 
 #pragma once
 
+#include <glm/vec4.hpp>
+
 #include "SDL.h"
+#include "Color.h"
 
 class Block {
 public:
@@ -9,8 +12,9 @@ public:
 	int x, y;
 	float seed;
 	GLfloat z;
-	GLubyte topColor[4];
-	GLubyte bottomColor[4];
+
+	Color topColor;
+	Color bottomColor;
 
 	void Init(int x, int y);
 	void UpdateHeights();
