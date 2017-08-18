@@ -7,7 +7,6 @@
 #include "Window.h"
 #include "Input.h"
 #include "Time.h"
-#include "Grid.h"
 
 Camera g_camera;
 
@@ -38,13 +37,15 @@ void Camera::Update(){
 		offsetY = 0;
 		rotationX = 0;
 	}
-	
-	float x = g_grid.viewOffsetX;
-	float y = g_grid.viewOffsetY;
-	CenterOn(glm::vec3(x, y, 0), cameraDistance);
+
 }
 
 void Camera::CenterOn(const glm::vec3 &point, float distance){
+	if(distance == 0)
+		distance = cameraDistance;
+
+	cameraDistance = distance;
+
 	eye = glm::vec3(-distance, -distance, distance * (1.25f + offsetY) );
 	eye = glm::rotate(eye, rotationX, glm::vec3(0, 0, 1));
 	eye += point;

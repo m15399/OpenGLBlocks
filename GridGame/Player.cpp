@@ -6,10 +6,10 @@
 #include <iostream>
 
 #include "Player.h"
-#include "Input.h"
-#include "Time.h"
-#include "Primitives.h"
-#include "Shader.h"
+#include "../Input.h"
+#include "../Time.h"
+#include "../Primitives.h"
+#include "../Shader.h"
 #include "Grid.h"
 
 Player g_player;

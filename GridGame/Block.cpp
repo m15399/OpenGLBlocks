@@ -2,8 +2,8 @@
 #include <cmath>
 
 #include "Block.h"
-#include "Time.h"
-#include "Utils.h"
+#include "../Time.h"
+#include "../Utils.h"
 #include "Grid.h"
 
 

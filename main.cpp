@@ -1,40 +1,17 @@
 
-/*
-
-TODO
-
-switch back to a shared vOffset buffer?
-some sort of vertexdata class
-	allocate based on verts, faces
-	push vert, push face functions
-	update colors
-	update buffers (only updates what was changed)
-ridiculous cpu usage when not focused
-threading
-	update 1/4 blocks, push 1/4 geometry...
-	only update visible blocks
-task system?
-
-fix fullscreen
-high dpi
-
-*/
 
 #include <iostream>
-#include <thread>
-#include <atomic>
-#include <vector>
 
 #include "SDL.h"
 #include "Window.h"
 #include "Primitives.h"
-#include "Grid.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Time.h"
 #include "Input.h"
 #include "Globals.h"
-#include "Player.h"
+#include "Game.h"
+#include "GridGame/GridGame.h"
 
 bool running = true;
 
@@ -46,13 +23,15 @@ int main(){
 	g_time.Init();
 	g_primitives.Init();
 	g_camera.Init();
-	g_grid.Init();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
+	// Select game
+	g_game = new Game();
+	g_game->Init();
 
 	while(running){
 		g_input.Update();
@@ -79,45 +58,21 @@ int main(){
 			}
 		}
 
-		glClearColor(0, .25, .45, 1);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Update
 		{
-			g_player.Update();
-#if 1
-			g_grid.Update();
-
-			std::atomic<int> chunk;
-			chunk = 0;
-			constexpr int numChunks = 4;
-			
-			auto UpdateGridChunk = [&chunk, numChunks](){
-				g_grid.UpdateMeshes(chunk++, numChunks);
-			};
-
-			std::vector<std::thread> threads;
-			threads.reserve(numChunks);
-
-			for(int i = 0; i < numChunks; i++){
-				threads.emplace_back(UpdateGridChunk);
-				// UpdateGridChunk();
-			}
-			for(auto& thread : threads){
-				thread.join();
-			}
-
-			g_grid.PushMeshes();
-#endif
-
+			g_game->Update();
 
 			g_camera.Update();
 		}
 
 		// Draw
+
+		glClearColor(0, .25, .45, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		{
-			g_grid.Draw();
-			g_player.Draw();
+			g_game->Draw();
 
 			g_window.Draw();
 		}

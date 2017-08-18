@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Block.h"
-#include "Mesh.h"
+#include "../Mesh.h"
 
 class Grid {
 

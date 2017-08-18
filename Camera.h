@@ -13,7 +13,7 @@ class Camera {
 
 public:
 
-	float defaultCameraDistance = 1.f * 20.f;
+	float defaultCameraDistance = 10;
 	float cameraDistance = defaultCameraDistance;
 
 	float rotationX = 0;
@@ -25,7 +25,7 @@ public:
 
 	void Update();
 
-	void CenterOn(const glm::vec3 &point, float distance);
+	void CenterOn(const glm::vec3 &point, float distance = 0);
 
 	glm::mat4 GetViewProjMatrix();
 
