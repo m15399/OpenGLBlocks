@@ -24,6 +24,7 @@ void Mesh::Init(){
 void Mesh::SetVertices(const GLfloat* vertices, int count){
 	glBindBuffer(GL_ARRAY_BUFFER, a_positionBuffer);
 	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	verticesLen = count;
 }
 
 void Mesh::SetColors(const GLubyte* colors, int count){
@@ -36,59 +37,73 @@ void Mesh::SetBoneIndeces(const GLushort* indeces, int count){
 	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLushort), indeces, GL_STATIC_DRAW);	
 }
 
-
-// TODO combine with SetVertices - calculate normals?
+// TODO combine with SetVertices - to calculate normals?
+// TOTO Or CalculateNormals is a separate step
 void Mesh::SetIndeces(const GLuint* indeces, int count){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indecesBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), indeces, GL_STATIC_DRAW);
 	numIndeces = (GLsizei) count;
-}
-
-void Mesh::Set(const GLfloat* vertices, const GLubyte* colors, int numVertices,
-			const GLuint* indeces, int numTris){
-	SetVertices(vertices, numVertices * 6);
-	SetColors(colors, numVertices * 4);
-	SetIndeces(indeces, numTris * 3);
+	usingIndeces = true;
 }
 
 void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& colorTint){
 	shader.Use();
+	shader.EnableAttribs();
 
 	glm::mat4 MVP = g_camera.GetViewProjMatrix() * modelMatrix;
 
 	glUniformMatrix4fv(shader.mvpLoc, 1, GL_FALSE, glm::value_ptr(MVP));
 	glUniform4fv(shader.colorTintLoc, 1, glm::value_ptr(colorTint));
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indecesBuffer);
+	// Figure out what the shader expects
+	//
+	bool usesInlineNormalBuffer = shader.a_normalLoc != -1;
+	bool usesSeparateColorBuffer = shader.a_colorLoc != -1;
+	bool usesSeparateBoneIndexBuffer = shader.a_boneIndexLoc != -1;
 
+	// Calculate sizes, offsets
+	// Always have x, y, z
+	//
+	GLsizei currSize = 3 * sizeof(GL_FLOAT);
 
-	glEnableVertexAttribArray(shader.a_positionLoc);
-	glEnableVertexAttribArray(shader.a_normalLoc);
+	uintptr_t inlineNormalsOffset = currSize;
+	if(usesInlineNormalBuffer)
+		currSize += 3 * sizeof(GL_FLOAT);
+
+	GLsizei vertexStride = currSize;
+
+	// Bind all the things
+	//
+	if(usingIndeces){
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indecesBuffer);
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, a_positionBuffer);
-	glVertexAttribPointer(shader.a_positionLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GL_FLOAT), nullptr);
-	glVertexAttribPointer(shader.a_normalLoc, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GL_FLOAT), 
-		(void*) (3 * sizeof(GL_FLOAT)));
+	glVertexAttribPointer(shader.a_positionLoc, 3, GL_FLOAT, GL_FALSE, vertexStride, nullptr);
 
-	glEnableVertexAttribArray(shader.a_colorLoc);
-	glBindBuffer(GL_ARRAY_BUFFER, a_colorBuffer);
-	glVertexAttribPointer(shader.a_colorLoc, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
+	if(usesInlineNormalBuffer){
+		glVertexAttribPointer(shader.a_normalLoc, 3, GL_FLOAT, GL_FALSE, vertexStride, (void*) inlineNormalsOffset);
+	}
 
-	if(shader.a_boneIndexLoc != -1){
-		glEnableVertexAttribArray(shader.a_boneIndexLoc);
+	if(usesSeparateColorBuffer){
+		glBindBuffer(GL_ARRAY_BUFFER, a_colorBuffer);
+		glVertexAttribPointer(shader.a_colorLoc, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
+	}
+
+	if(usesSeparateBoneIndexBuffer){
 		glBindBuffer(GL_ARRAY_BUFFER, a_boneIndexBuffer);
-
 		glVertexAttribPointer(shader.a_boneIndexLoc, 1, GL_UNSIGNED_SHORT, GL_FALSE, 0, nullptr);
 	}
 
-	// TODO can go back to ushort when not debugging large grids
-	glDrawElements(GL_TRIANGLES, numIndeces, GL_UNSIGNED_INT, nullptr);
-
-	glDisableVertexAttribArray(shader.a_colorLoc);
-	glDisableVertexAttribArray(shader.a_positionLoc);
-	glDisableVertexAttribArray(shader.a_normalLoc);
-
-	if(shader.a_boneIndexLoc != -1){
-		glDisableVertexAttribArray(shader.a_boneIndexLoc);
+	// Draw
+	//
+	if(usingIndeces){
+		// TODO can go back to ushort when not debugging large grids
+		glDrawElements(GL_TRIANGLES, numIndeces, GL_UNSIGNED_INT, nullptr);
+	} else {
+		// TODO support more than just triangles
+		glDrawArrays(GL_TRIANGLES, 0, verticesLen);
 	}
 
+	shader.DisableAttribs();
 }

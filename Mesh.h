@@ -19,16 +19,16 @@ class Mesh {
 
 	GLuint indecesBuffer;
 	GLsizei numIndeces;
+	bool usingIndeces = false;
+
+	GLsizei verticesLen;
 
 	bool borrowingVOffsets = false;
 
 public:
 	
 	void Init();
-	
-	void Set(const GLfloat* vertices, const GLubyte* colors, int numVertices,
-			const GLuint* indeces, int numTris);
-	
+		
 	void SetVertices(const GLfloat* vertices, int count);
 	void SetColors(const GLubyte* colors, int count);
 	void SetBoneIndeces(const GLushort* indeces, int count);

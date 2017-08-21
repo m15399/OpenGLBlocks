@@ -100,7 +100,11 @@ static const GLuint cubeIndeces[] = {
 
 void Primitives::Init(){
 	cube.Init();
-	cube.Set(cubeVertices, cubeColors, 8 * 16, cubeIndeces, 12);
+	cube.SetVertices(cubeVertices, 6 * 4 * 6);
+	cube.SetColors(cubeColors, 6 * 4 * 4);
+	cube.SetIndeces(cubeIndeces, 6 * 2 * 3);
+
+	
 	// square.Init();
 	// square.Set(squareVertices, squareColors, 4, squareIndeces, 2);
 }

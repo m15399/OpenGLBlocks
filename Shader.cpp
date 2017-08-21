@@ -12,7 +12,14 @@ Shader* Shader::currShader = nullptr;
 
 
 void Shaders::Init(){
-	shader1.Load("shader1");
+	// Load all shaders from SHADER_LIST
+	//
+	#define LOAD_SHADER(name) \
+		name.Load(#name);
+
+	SHADER_LIST(LOAD_SHADER);
+
+	#undef LOAD_SHADER
 }
 
 
@@ -69,23 +76,26 @@ bool CreateShader(GLuint* dest, GLint type, std::string filename){
 	return status;
 }
 
-// Uses shaderName.vert and shaderName.frag
+// Uses Shaders/shaderName.vert and Shaders/shaderName.frag
 //
 bool Shader::Load(const char* shaderName){
 
 	bool status = true;
 
+	// TODO Windows platform paths
+	std::string shaderBasePath = std::string("Shaders/") + shaderName;
+
 	GLuint vertexShader, fragmentShader;
 	bool vertexShaderMade = false, fragmentShaderMade = false;
 
 	if(status){
-		status = CreateShader(&vertexShader, GL_VERTEX_SHADER, std::string(shaderName) + ".vert");
+		status = CreateShader(&vertexShader, GL_VERTEX_SHADER, shaderBasePath + ".vert");
 	}
 
 	if(status){
 		vertexShaderMade = true;
 
-		status = CreateShader(&fragmentShader, GL_FRAGMENT_SHADER, std::string(shaderName) + ".frag");
+		status = CreateShader(&fragmentShader, GL_FRAGMENT_SHADER, shaderBasePath + ".frag");
 	}
 
 	if(status){
@@ -122,10 +132,14 @@ bool Shader::Load(const char* shaderName){
 
 		SHADER_ATTRIB_LIST(LOCATE_ATTRIBUTE);
 
+		#undef LOCATE_ATTRIBUTE
+
 		#define LOCATE_UNIFORM(name) \
 			name##Loc = glGetUniformLocation(program, #name);
 
 		SHADER_UNIFORM_LIST(LOCATE_UNIFORM);
+
+		#undef LOCATE_UNIFORM
 	}
 
 	return status;
@@ -147,3 +161,31 @@ void Shader::Unuse(){
 	bound = false;
 }
 
+void Shader::EnableAttribs(){
+
+	#define ENABLE_ATTRIB(name) \
+		{ \
+			int loc = name##Loc; \
+			if(loc != -1){ \
+				glEnableVertexAttribArray(loc); \
+			} \
+		}
+
+	SHADER_ATTRIB_LIST(ENABLE_ATTRIB);
+
+	#undef ENABLE_ATTRIB
+}
+
+void Shader::DisableAttribs(){
+	#define DISABLE_ATTRIB(name) \
+		{ \
+			int loc = name##Loc; \
+			if(loc != -1){ \
+				glDisableVertexAttribArray(loc); \
+			} \
+		}
+
+	SHADER_ATTRIB_LIST(DISABLE_ATTRIB);
+
+	#undef DISABLE_ATTRIB
+}

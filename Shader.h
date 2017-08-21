@@ -3,6 +3,10 @@
 
 #include "SDL.h"
 
+#define SHADER_LIST(F) \
+	F(shader1) \
+	F(basic)
+
 // Uses: 
 //	shader.nameLoc - location of the attribute
 // 	mesh.nameBuffer
@@ -41,13 +45,21 @@ public:
 	void Use();
 	void Unuse();
 
+	void EnableAttribs();
+	void DisableAttribs();
+
 };
 
 class Shaders {
 public:
 	void Init();
 
-	Shader shader1;
+	#define DEFINE_SHADER(name) \
+		Shader name;
+
+	SHADER_LIST(DEFINE_SHADER);
+
+	#undef DEFINE_SHADER
 };
 
 extern Shaders g_shaders;

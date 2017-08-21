@@ -212,8 +212,14 @@ void Grid::UpdateMeshes(int chunk, int numChunks){
 }
 
 void Grid::PushMeshes(){
-	gridTopsMesh.Set(&verticesTop[0], &colorsTop[0], nVerticesTop, &indecesTop[0], nTrisTop);
-	gridBottomsMesh.Set(&verticesBottom[0], &colorsBottom[0], nVerticesBottom, &indecesBottom[0], nTrisBottom);
+	gridTopsMesh.SetVertices(&verticesTop[0], nVerticesTop * 6);
+	gridTopsMesh.SetColors(&colorsTop[0], nVerticesTop * 4);
+	gridTopsMesh.SetIndeces(&indecesTop[0], nTrisTop * 3);
+
+	gridBottomsMesh.SetVertices(&verticesBottom[0], nVerticesBottom * 6);
+	gridBottomsMesh.SetColors(&colorsBottom[0], nVerticesBottom * 4);
+	gridBottomsMesh.SetIndeces(&indecesBottom[0], nTrisBottom * 3);
+
 }
 
 void Grid::Update(){
