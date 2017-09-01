@@ -4,13 +4,21 @@ Game* g_game = nullptr;
 
 // Temporary location...
 
+// TODO
+// We need to sort different draw calls into different buckets
+// One VertexData per type, sort by:
+// - DrawType (GL_LINES, GL_TRIANGLES)
+//   - Shader
+//     - Texture
+//
+// Alternatively draw everything in order
+// Switch to a new VertexData when any gl state switches
 
-#include <vector>
-#include "SDL.h"
-#include "VertexData.h"
-#include "Color.h"
-#include "Utils.h"
-
+// TODO
+// overlapping textures
+// interface like drawSquare, ...
+// squares can be drawn with texture shader, just need a white square
+// tex coords can be ushorts
 
 void PushSquare(VertexData& v, float x, float y, float size){
 	float s2 = size/2;
@@ -26,12 +34,12 @@ void PushSquare(VertexData& v, float x, float y, float size){
 	GLubyte g = 255;
 	GLubyte b = 255;
 
-	v.PushVertex(x1, y1, 0, 0, 0);
-	v.PushVertex(x2, y1, 0, 1, 0);
-	v.PushVertex(x1, y2, 0, 0, 1);
-	v.PushVertex(x1, y2, 0, 0, 1);
-	v.PushVertex(x2, y1, 0, 1, 0);
-	v.PushVertex(x2, y2, 0, 1, 1);
+	v.PushVertex(x1, y1, 0, 0, 1);
+	v.PushVertex(x2, y1, 0, 1, 1);
+	v.PushVertex(x1, y2, 0, 0, 0);
+	v.PushVertex(x1, y2, 0, 0, 0);
+	v.PushVertex(x2, y1, 0, 1, 1);
+	v.PushVertex(x2, y2, 0, 1, 0);
 
 	v.PushColor(r, g, b, 255);
 	v.PushColor(r, g, b, 255);
@@ -42,24 +50,35 @@ void PushSquare(VertexData& v, float x, float y, float size){
 }
 
 Texture tex;
+VertexData v;
 
 void Game::Init(){
 	tex.Init("pup.png");
+	g_camera.mode = Camera::Mode::TopDown;
 }
 
-void Game::Update(){}
+void Game::Update(){
+	g_camera.CenterOn(glm::vec3{});
+}
 
 
 void Game::Draw(){
+	glDisable(GL_DEPTH_TEST);
 
 	Mesh m;
-	VertexData v;
+	m.Init();
 	float s = .5f;
+	float spacing = s * std::sin(time());
 	for(int i = 0; i < 10; i++){
 		for(int j = 0; j < 10; j++){
-			PushSquare(v, i * s, j * s, s);
+			PushSquare(v, i * spacing, j * spacing, s);
 		}
 	}
 	v.SendToMesh(m);
+	v.Clear();
+
 	m.Draw(g_shaders.basic_color_tex, glm::mat4(1.0f), Color(255, 255, 255, 255).ToVec4(), &tex);
+
+	glEnable(GL_DEPTH_TEST);
+
 }

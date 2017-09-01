@@ -16,4 +16,6 @@ public:
 	void PushColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
 
 	void SendToMesh(Mesh& mesh);
+
+	void Clear();
 };

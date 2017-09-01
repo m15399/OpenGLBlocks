@@ -5,6 +5,10 @@ float dt(){
 	return g_time.dt / 1000.f;
 }
 
+double time(){
+	return ((double) g_time.time / 1000);
+}
+
 uint64_t Millis(){
 	uint64_t milliseconds_since_epoch = 
 		std::chrono::duration_cast<std::chrono::milliseconds>(

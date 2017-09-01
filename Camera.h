@@ -12,6 +12,13 @@ class Camera {
 
 public:
 
+	enum class Mode {
+		Targetted,
+		TopDown
+	};
+
+	Mode mode = Mode::Targetted;
+
 	float defaultCameraDistance = 10;
 	float cameraDistance = defaultCameraDistance;
 

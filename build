@@ -1,3 +1,4 @@
+#!/bin/bash
 
 CXX="clang++"
 INCLUDES="-I /usr/local/include"
@@ -24,3 +25,5 @@ RET=$?
 if [ $RET -eq 0 ]; then
 	rm $UNITY_FILE
 fi
+
+exit $RET

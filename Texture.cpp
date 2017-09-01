@@ -2,10 +2,10 @@
 Texture* Texture::currTexture = nullptr;
 
 void Texture::Init(const char* filename){
-	stbi_set_flip_vertically_on_load(1);
+	// stbi_set_flip_vertically_on_load(1);
 	stbi_uc* pixels = stbi_load(filename, &width, &height, &numChannels, 4);
 	assert(pixels != nullptr);
-	printf("Load image: %s size: %dx%d channels: %d data: %p \n", filename, width, height, numChannels, pixels);
+	printf("Loaded image: %s size: %dx%d channels: %d data: %p \n", filename, width, height, numChannels, pixels);
 
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);

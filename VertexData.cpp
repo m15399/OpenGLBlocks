@@ -27,3 +27,8 @@ void VertexData::SendToMesh(Mesh& mesh){
 		mesh.SetColors(&colors[0], colors.size());
 	}
 }
+
+void VertexData::Clear(){
+	vertices.clear();
+	colors.clear();
+}

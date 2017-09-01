@@ -7,6 +7,11 @@
 //
 float dt();
 
+// Time in sec
+//
+double time();
+
+
 class Time {
 public:
 
