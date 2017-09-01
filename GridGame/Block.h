@@ -1,10 +1,7 @@
 
 #pragma once
 
-#include <glm/vec4.hpp>
-
-#include "SDL.h"
-#include "Color.h"
+#include "GridGame.h"
 
 class Block {
 public:

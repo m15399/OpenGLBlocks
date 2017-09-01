@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <unordered_map>
-
 #include "SDL.h"
 
 class Input {

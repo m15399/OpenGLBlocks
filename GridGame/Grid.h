@@ -1,8 +1,7 @@
 
 #pragma once
 
-#include "Block.h"
-#include "Mesh.h"
+#include "GridGame.h"
 
 class Grid {
 

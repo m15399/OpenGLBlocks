@@ -3,7 +3,6 @@
 
 #include "SDL.h"
 
-
 class Window {
 
 	SDL_Window* window;

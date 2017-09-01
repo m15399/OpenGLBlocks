@@ -1,13 +1,4 @@
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
-#include "Camera.h"
-#include "Window.h"
-#include "Input.h"
-#include "Time.h"
-
 Camera g_camera;
 
 void Camera::Init(){

@@ -1,8 +1,4 @@
 
-#include <iostream>
-
-#include "Window.h"
-
 Window g_window;
 
 void Window::Init(){

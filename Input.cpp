@@ -1,8 +1,4 @@
 
-#include <cstring>
-
-#include "Input.h"
-
 Input g_input;
 
 void Input::Init(){

@@ -1,7 +1,11 @@
 
 #pragma once
 
-#include "Game.h"
+#include "../SDL.h"
+#include "Block.h"
+#include "Grid.h"
+#include "Player.h"
+
 
 class GridGame : public Game {
 public:

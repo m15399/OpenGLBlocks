@@ -1,10 +1,7 @@
 
 #pragma once
 
-#include <vector>
-
 #include "SDL.h"
-#include "Mesh.h"
 
 class VertexData {
 public:

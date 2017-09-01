@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "GridGame.h"
+
 class Player {
 public:
 

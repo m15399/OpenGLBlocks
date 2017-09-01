@@ -1,12 +1,4 @@
 
-#include <cmath>
-
-#include "Block.h"
-#include "Time.h"
-#include "Utils.h"
-#include "Grid.h"
-
-
 Color WaterColor{0, 100, 205, 255};
 Color GrassColor{100, 184, 105, 255};
 Color CoolShadow{0, 10, 50, 255};

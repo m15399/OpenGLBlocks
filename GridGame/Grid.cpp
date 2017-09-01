@@ -1,14 +1,4 @@
 
-#include <iostream>
-#include <cmath>
-
-#include "Grid.h"
-#include "Mesh.h"
-#include "Utils.h"
-#include "Time.h"
-#include "Input.h"
-#include "Player.h"
-
 Grid g_grid;
 
 void Grid::Init(){

@@ -1,6 +1,4 @@
 
-#include "VertexData.h"
-
 void VertexData::PushVertex(GLfloat x, GLfloat y, GLfloat z){
 	vertices.push_back(x);
 	vertices.push_back(y);

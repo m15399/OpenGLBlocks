@@ -1,14 +1,4 @@
 
-#include <thread>
-#include <atomic>
-#include <vector>
-
-#include "GridGame.h"
-#include "Grid.h"
-#include "Player.h"
-#include "Camera.h"
-#include "VertexData.h"
-
 /*
 
 TODO

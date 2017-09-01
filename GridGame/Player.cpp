@@ -1,17 +1,4 @@
 
-#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
-
-#include "Player.h"
-#include "Input.h"
-#include "Time.h"
-#include "Primitives.h"
-#include "Shader.h"
-#include "Grid.h"
-
 Player g_player;
 
 void Player::Update(){

@@ -1,11 +1,4 @@
 
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-
-#include "Shader.h"
-
 Shaders g_shaders;
 
 Shader* Shader::currShader = nullptr;

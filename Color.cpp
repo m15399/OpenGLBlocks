@@ -1,9 +1,4 @@
 
-#include <cmath>
-
-#include "Color.h"
-#include "Utils.h"
-
 Color::Color(){
 
 }

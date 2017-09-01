@@ -1,18 +1,4 @@
 
-
-#include <iostream>
-
-#include "SDL.h"
-#include "Window.h"
-#include "Primitives.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "Time.h"
-#include "Input.h"
-#include "Globals.h"
-#include "Game.h"
-#include "GridGame/GridGame.h"
-
 bool running = true;
 
 int main(){

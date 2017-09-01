@@ -1,10 +1,4 @@
 
-#include <chrono>
-#include <iostream>
-
-#include "Time.h"
-#include "Globals.h"
-
 Time g_time;
 
 float dt(){

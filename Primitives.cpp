@@ -1,8 +1,4 @@
 
-#include "Primitives.h"
-#include "SDL.h"
-#include "Mesh.h"
-
 Primitives g_primitives;
 
 

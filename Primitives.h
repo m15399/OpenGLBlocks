@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Mesh.h"
+#include "SDL.h"
 
 class Primitives {
 public:

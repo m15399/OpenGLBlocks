@@ -1,12 +1,4 @@
 
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
-
-#include "Mesh.h"
-#include "Camera.h"
-#include "Shader.h"
-
 glm::mat4 modelMatrix;
 
 
