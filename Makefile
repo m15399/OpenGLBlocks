@@ -1,8 +1,12 @@
 
-INCLUDES = -L /usr/local/lib -I /usr/local/include
+CXX = clang++
+INCLUDES = -I /usr/local/include
+LIBRARIES = -L /usr/local/lib -lSDL2 -framework OpenGL
+CXX_FLAGS = -Wall -g -std=c++14
 
-FILES = *.cpp
-FILES += GridGame/*.cpp
+IN_FILES = *.cpp
+IN_FILES += GridGame/*.cpp
 
-all:
-	time clang++ -Wall -g $(INCLUDES) -lSDL2 -framework OpenGL -std=c++14 $(FILES)
+
+all: 
+	$(CXX) $(INCLUDES) $(LIBRARIES) $(CXX_FLAGS) $(IN_FILES)

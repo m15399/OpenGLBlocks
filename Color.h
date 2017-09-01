@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <glm/vec4.hpp>
+
 #include "SDL.h"
 
 class Color{
@@ -19,5 +21,7 @@ public:
 	Color Lerp(const Color& other, float t);
 
 	void Brighten(float amt);
+
+	glm::vec4 ToVec4();
 
 };

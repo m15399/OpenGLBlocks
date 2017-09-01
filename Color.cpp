@@ -50,3 +50,6 @@ void Color::Brighten(float amt){
 		(*this)[i] = (GLubyte)(int)(std::round(Clamp(amt * (*this)[i], 0.f, 254.99f)));
 }
 
+glm::vec4 Color::ToVec4(){
+	return glm::vec4((GLfloat) r / 255.0f, (GLfloat) g / 255.0f, (GLfloat) b / 255.0f, (GLfloat) a / 255.0f);
+}

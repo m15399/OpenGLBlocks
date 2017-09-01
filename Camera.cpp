@@ -38,6 +38,7 @@ void Camera::Update(){
 		rotationX = 0;
 	}
 
+	g_camera.CenterOn(center, cameraDistance);
 }
 
 void Camera::CenterOn(const glm::vec3 &point, float distance){

@@ -25,12 +25,12 @@ int main(){
 	g_camera.Init();
 
 	glEnable(GL_DEPTH_TEST);
-	// glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
 	// Select game
-	g_game = new GridGame();
+	g_game = new Game();
 	g_game->Init();
 
 	while(running){

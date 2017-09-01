@@ -46,7 +46,7 @@ void Mesh::SetIndeces(const GLuint* indeces, int count){
 	usingIndeces = true;
 }
 
-void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& colorTint){
+void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& colorTint, Texture* texture){
 	shader.Use();
 	shader.EnableAttribs();
 
@@ -54,10 +54,15 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 
 	glUniformMatrix4fv(shader.mvpLoc, 1, GL_FALSE, glm::value_ptr(MVP));
 	glUniform4fv(shader.colorTintLoc, 1, glm::value_ptr(colorTint));
+	if(texture){
+		texture->Use();
+		glUniform1i(shader.texLoc, texture->boundUnit);
+	}
 
 	// Figure out what the shader expects
 	//
 	bool usesInlineNormalBuffer = shader.a_normalLoc != -1;
+	bool usesInlineUvBuffer = shader.a_uvLoc != -1;
 	bool usesSeparateColorBuffer = shader.a_colorLoc != -1;
 	bool usesSeparateBoneIndexBuffer = shader.a_boneIndexLoc != -1;
 
@@ -66,9 +71,12 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 	//
 	GLsizei currSize = 3 * sizeof(GL_FLOAT);
 
-	uintptr_t inlineNormalsOffset = currSize;
+	uintptr_t inlineNormalOffset = currSize;
 	if(usesInlineNormalBuffer)
 		currSize += 3 * sizeof(GL_FLOAT);
+	uintptr_t inlineUvOffset = currSize;
+	if(usesInlineUvBuffer)
+		currSize += 2 * sizeof(GL_FLOAT);
 
 	GLsizei vertexStride = currSize;
 
@@ -82,7 +90,11 @@ void Mesh::Draw(Shader& shader, const glm::mat4& modelMatrix, const glm::vec4& c
 	glVertexAttribPointer(shader.a_positionLoc, 3, GL_FLOAT, GL_FALSE, vertexStride, nullptr);
 
 	if(usesInlineNormalBuffer){
-		glVertexAttribPointer(shader.a_normalLoc, 3, GL_FLOAT, GL_FALSE, vertexStride, (void*) inlineNormalsOffset);
+		glVertexAttribPointer(shader.a_normalLoc, 3, GL_FLOAT, GL_FALSE, vertexStride, (void*) inlineNormalOffset);
+	}
+
+	if(usesInlineUvBuffer){
+		glVertexAttribPointer(shader.a_uvLoc, 2, GL_FLOAT, GL_FALSE, vertexStride, (void*) inlineUvOffset);
 	}
 
 	if(usesSeparateColorBuffer){

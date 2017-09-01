@@ -3,8 +3,8 @@
 
 #include <glm/vec4.hpp>
 
-#include "../SDL.h"
-#include "../Color.h"
+#include "SDL.h"
+#include "Color.h"
 
 class Block {
 public:

@@ -6,8 +6,8 @@
 #include "GridGame.h"
 #include "Grid.h"
 #include "Player.h"
-#include "../Camera.h"
-#include "../VertexData.h"
+#include "Camera.h"
+#include "VertexData.h"
 
 /*
 
@@ -76,14 +76,4 @@ void GridGame::Draw(){
 
 	g_grid.Draw();
 	g_player.Draw();
-
-	// Testing
-
-	Mesh m;
-	VertexData v;
-	v.PushVertex(-10, 0, 0);
-	v.PushVertex(10, 0, 0);
-	v.PushVertex(0, 10, 0);
-	v.SendToMesh(m);
-	m.Draw(g_shaders.basic);
 }
