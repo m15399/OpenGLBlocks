@@ -49,12 +49,18 @@ void PushSquare(VertexData& v, float x, float y, float size){
 	v.PushColor(r, g, b, 255);
 }
 
+
+
 Texture tex;
 VertexData v;
+
+
 
 void Game::Init(){
 	tex.Init("pup.png");
 	g_camera.mode = Camera::Mode::TopDown;
+
+
 }
 
 void Game::Update(){

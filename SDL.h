@@ -31,6 +31,7 @@
 
 #include "lib/stb_image.h"
 
+#include "Audio.h"
 #include "Camera.h"
 #include "Color.h"
 #include "Game.h"

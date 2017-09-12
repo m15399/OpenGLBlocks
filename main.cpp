@@ -9,6 +9,7 @@ int main(){
 	g_time.Init();
 	g_primitives.Init();
 	g_camera.Init();
+	g_audio.Init();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -35,6 +36,15 @@ int main(){
 							g_window.Resize(event.window.data1, event.window.data2);
 							break;
 					}
+
+				// TODO implement audio switching:
+				// if ((event.type == SDL_AUDIODEVICEADDED && !event.adevice.iscapture) ||
+				// 	(event.type == SDL_AUDIODEVICEREMOVED && !event.adevice.iscapture && event.adevice.which == device)) {
+				// 	reopen_audio();
+				// }
+				// TODO there is also this check in the example:
+				// (SDL_GetAudioDeviceStatus(device) != SDL_AUDIO_PLAYING)
+		
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
 					g_input.UpdateKey(event.key);
